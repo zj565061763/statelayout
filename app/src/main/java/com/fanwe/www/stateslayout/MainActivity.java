@@ -5,12 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.fanwe.lib.stateslayout.SDStatesLayout;
+import com.fanwe.lib.statelayout.SDStateLayout;
+
 
 public class MainActivity extends AppCompatActivity
 {
-
-    private SDStatesLayout mStatesLayout;
+    private SDStateLayout mStatesLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -18,9 +18,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mStatesLayout = SDStatesLayout.wrap(findViewById(R.id.ll_content));
+        mStatesLayout = SDStateLayout.wrap(findViewById(R.id.ll_content));
         mStatesLayout.getErrorView().setContentView(R.layout.layout_state_error);
-        mStatesLayout.setCallback(new SDStatesLayout.Callback()
+        mStatesLayout.setCallback(new SDStateLayout.Callback()
         {
             @Override
             public void onClickErrorView(View view)

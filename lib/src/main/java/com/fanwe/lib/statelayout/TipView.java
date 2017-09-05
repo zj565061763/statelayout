@@ -1,4 +1,4 @@
-package com.fanwe.lib.stateslayout;
+package com.fanwe.lib.statelayout;
 
 import android.content.Context;
 import android.util.AttributeSet;
