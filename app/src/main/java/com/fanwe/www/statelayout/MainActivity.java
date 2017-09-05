@@ -10,7 +10,7 @@ import com.fanwe.lib.statelayout.SDStateLayout;
 
 public class MainActivity extends AppCompatActivity
 {
-    private SDStateLayout mStatesLayout;
+    private SDStateLayout mStateLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -18,9 +18,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mStatesLayout = SDStateLayout.wrap(findViewById(R.id.ll_content));
-        mStatesLayout.getErrorView().setContentView(R.layout.layout_state_error);
-        mStatesLayout.setCallback(new SDStateLayout.Callback()
+        mStateLayout = SDStateLayout.wrap(findViewById(R.id.ll_content));
+        mStateLayout.getErrorView().setContentView(R.layout.layout_state_error);
+        mStateLayout.setCallback(new SDStateLayout.Callback()
         {
             @Override
             public void onClickErrorView(View view)
@@ -38,6 +38,6 @@ public class MainActivity extends AppCompatActivity
 
     public void onClickBtn(View view)
     {
-        mStatesLayout.showError();
+        mStateLayout.showError();
     }
 }

@@ -57,11 +57,11 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         ViewGroup.LayoutParams params = view.getLayoutParams();
         viewGroup.removeView(view);
 
-        SDStateLayout statesLayout = new SDStateLayout(view.getContext());
-        statesLayout.setContentView(view);
-        statesLayout.showContent();
-        viewGroup.addView(statesLayout, index, params);
-        return statesLayout;
+        SDStateLayout stateLayout = new SDStateLayout(view.getContext());
+        stateLayout.setContentView(view);
+        stateLayout.showContent();
+        viewGroup.addView(stateLayout, index, params);
+        return stateLayout;
     }
 
     public SDStateLayout setCallback(Callback callback)
