@@ -1,4 +1,4 @@
-package com.fanwe.www.stateslayout;
+package com.fanwe.www.statelayout;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
