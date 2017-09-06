@@ -21,11 +21,3 @@ android {
 
 dependencies {
 }
-
-tasks.withType(Javadoc) {
-    options {
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        failOnError false
-    }
-}
