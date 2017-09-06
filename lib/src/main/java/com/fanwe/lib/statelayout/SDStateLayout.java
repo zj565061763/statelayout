@@ -29,8 +29,8 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
     }
 
     private View mContentView;
-    private StateView mErrorView;
-    private StateView mEmptyView;
+    private SDStateView mErrorView;
+    private SDStateView mEmptyView;
 
     private Callback mCallback;
 
@@ -52,7 +52,7 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         hideView(mEmptyView);
     }
 
-    public StateView showError()
+    public SDStateView showError()
     {
         showView(getErrorView());
         hideView(mContentView);
@@ -60,7 +60,7 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         return mEmptyView;
     }
 
-    public StateView showEmpty()
+    public SDStateView showEmpty()
     {
         showView(getEmptyView());
         hideView(mContentView);
@@ -77,11 +77,11 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         return mContentView;
     }
 
-    public StateView getErrorView()
+    public SDStateView getErrorView()
     {
         if (mErrorView == null)
         {
-            mErrorView = new StateView(getContext());
+            mErrorView = new SDStateView(getContext());
             addView(mErrorView);
             hideView(mErrorView);
         }
@@ -89,11 +89,11 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         return mErrorView;
     }
 
-    public StateView getEmptyView()
+    public SDStateView getEmptyView()
     {
         if (mEmptyView == null)
         {
-            mEmptyView = new StateView(getContext());
+            mEmptyView = new SDStateView(getContext());
             addView(mEmptyView);
             hideView(mEmptyView);
         }
