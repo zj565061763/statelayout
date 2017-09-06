@@ -3,8 +3,6 @@ package com.fanwe.lib.statelayout;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 /**
@@ -31,37 +29,14 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
     }
 
     private View mContentView;
-    private TipView mErrorView;
-    private TipView mEmptyView;
+    private StateView mErrorView;
+    private StateView mEmptyView;
 
     private Callback mCallback;
 
     private void init(AttributeSet attrs)
     {
 
-    }
-
-    public static SDStateLayout wrap(View view)
-    {
-        if (view == null)
-        {
-            return null;
-        }
-        ViewParent parent = view.getParent();
-        if (parent == null || !(parent instanceof ViewGroup))
-        {
-            return null;
-        }
-        ViewGroup viewGroup = (ViewGroup) parent;
-        int index = viewGroup.indexOfChild(view);
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        viewGroup.removeView(view);
-
-        SDStateLayout stateLayout = new SDStateLayout(view.getContext());
-        stateLayout.setContentView(view);
-        stateLayout.showContent();
-        viewGroup.addView(stateLayout, index, params);
-        return stateLayout;
     }
 
     public SDStateLayout setCallback(Callback callback)
@@ -77,7 +52,7 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         hideView(mEmptyView);
     }
 
-    public TipView showError()
+    public StateView showError()
     {
         showView(getErrorView());
         hideView(mContentView);
@@ -85,7 +60,7 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         return mEmptyView;
     }
 
-    public TipView showEmpty()
+    public StateView showEmpty()
     {
         showView(getEmptyView());
         hideView(mContentView);
@@ -102,11 +77,11 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         return mContentView;
     }
 
-    public TipView getErrorView()
+    public StateView getErrorView()
     {
         if (mErrorView == null)
         {
-            mErrorView = new TipView(getContext());
+            mErrorView = new StateView(getContext());
             addView(mErrorView);
             hideView(mErrorView);
         }
@@ -114,11 +89,11 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         return mErrorView;
     }
 
-    public TipView getEmptyView()
+    public StateView getEmptyView()
     {
         if (mEmptyView == null)
         {
-            mEmptyView = new TipView(getContext());
+            mEmptyView = new StateView(getContext());
             addView(mEmptyView);
             hideView(mEmptyView);
         }
@@ -165,6 +140,18 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
         {
             getCallback().onClickEmptyView(v);
         }
+    }
+
+    @Override
+    protected void onFinishInflate()
+    {
+        super.onFinishInflate();
+
+        if (getChildCount() > 1)
+        {
+            throw new IllegalArgumentException("SDStateLayout can only add one child");
+        }
+        setContentView(getChildAt(0));
     }
 
     private Callback getCallback()

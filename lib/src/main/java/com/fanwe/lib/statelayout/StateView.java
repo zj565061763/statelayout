@@ -8,24 +8,24 @@ import android.widget.FrameLayout;
 /**
  * Created by zhengjun on 2017/9/5.
  */
-public class TipView extends FrameLayout
+public class StateView extends FrameLayout
 {
-    public TipView(Context context)
+    public StateView(Context context)
     {
         super(context);
     }
 
-    public TipView(Context context, AttributeSet attrs)
+    public StateView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
 
-    public TipView(Context context, AttributeSet attrs, int defStyleAttr)
+    public StateView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
     }
 
-    public TipView setContentView(int layoutId)
+    public StateView setContentView(int layoutId)
     {
         removeAllViews();
         LayoutInflater.from(getContext()).inflate(layoutId, this, true);
