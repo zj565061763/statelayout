@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
@@ -21,15 +20,6 @@ android {
 }
 
 dependencies {
-}
-
-publish {
-    userOrg = 'zj565061763'
-    groupId = 'com.fanwe.android'
-    artifactId = 'statelayout'
-    publishVersion = '1.0.0'
-    desc = 'fanwe android statelayout library'
-    website = 'https://github.com/zj565061763/statelayout'
 }
 
 tasks.withType(Javadoc) {
