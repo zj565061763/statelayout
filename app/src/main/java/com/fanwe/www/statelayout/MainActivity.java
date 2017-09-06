@@ -17,8 +17,8 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mStateLayout = (SDStateLayout) findViewById(R.id.view_state);
 
-        mStateLayout = SDStateLayout.wrap(findViewById(R.id.ll_content));
         mStateLayout.getErrorView().setContentView(R.layout.layout_state_error);
         mStateLayout.setCallback(new SDStateLayout.Callback()
         {

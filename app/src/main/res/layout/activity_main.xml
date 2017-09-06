@@ -11,18 +11,25 @@
         android:onClick="onClickBtn"
         android:text="Hello World!"/>
 
-    <LinearLayout
-        android:id="@+id/ll_content"
+    <com.fanwe.lib.statelayout.SDStateLayout
+        android:id="@+id/view_state"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <Button
+        <LinearLayout
+            android:id="@+id/ll_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"/>
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hello World!"/>
 
+        </LinearLayout>
+
+    </com.fanwe.lib.statelayout.SDStateLayout>
 
 </LinearLayout>
