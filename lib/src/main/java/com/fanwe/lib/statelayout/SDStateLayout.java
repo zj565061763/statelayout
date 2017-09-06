@@ -45,22 +45,20 @@ public class SDStateLayout extends FrameLayout
         hideView(mEmptyView);
     }
 
-    public SDStateView showError()
+    public void showError()
     {
         showView(getErrorView());
         showView(getContentView());
 
         hideView(mEmptyView);
-        return mEmptyView;
     }
 
-    public SDStateView showEmpty()
+    public void showEmpty()
     {
         showView(getContentView());
         showView(getEmptyView());
 
         hideView(mErrorView);
-        return mErrorView;
     }
 
     private View getContentView()
