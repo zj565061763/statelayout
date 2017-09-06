@@ -8,7 +8,7 @@ import android.widget.FrameLayout;
 /**
  * Created by zhengjun on 2017/9/5.
  */
-public class SDStateLayout extends FrameLayout implements View.OnClickListener
+public class SDStateLayout extends FrameLayout
 {
     public SDStateLayout(Context context)
     {
@@ -32,22 +32,15 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
     private SDStateView mErrorView;
     private SDStateView mEmptyView;
 
-    private Callback mCallback;
-
     private void init(AttributeSet attrs)
     {
 
     }
 
-    public SDStateLayout setCallback(Callback callback)
-    {
-        mCallback = callback;
-        return this;
-    }
-
     public void showContent()
     {
         showView(getContentView());
+
         hideView(mErrorView);
         hideView(mEmptyView);
     }
@@ -55,25 +48,23 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
     public SDStateView showError()
     {
         showView(getErrorView());
-        hideView(mContentView);
+        showView(getContentView());
+
         hideView(mEmptyView);
         return mEmptyView;
     }
 
     public SDStateView showEmpty()
     {
+        showView(getContentView());
         showView(getEmptyView());
-        hideView(mContentView);
+
         hideView(mErrorView);
         return mErrorView;
     }
 
     private View getContentView()
     {
-        if (mContentView != null && mContentView.getParent() != this)
-        {
-            addView(mContentView);
-        }
         return mContentView;
     }
 
@@ -85,7 +76,6 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
             addView(mErrorView);
             hideView(mErrorView);
         }
-        mErrorView.setOnClickListener(this);
         return mErrorView;
     }
 
@@ -97,7 +87,6 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
             addView(mEmptyView);
             hideView(mEmptyView);
         }
-        mEmptyView.setOnClickListener(this);
         return mEmptyView;
     }
 
@@ -131,18 +120,6 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View v)
-    {
-        if (v == mErrorView)
-        {
-            getCallback().onClickErrorView(v);
-        } else if (v == mEmptyView)
-        {
-            getCallback().onClickEmptyView(v);
-        }
-    }
-
-    @Override
     protected void onFinishInflate()
     {
         super.onFinishInflate();
@@ -152,32 +129,9 @@ public class SDStateLayout extends FrameLayout implements View.OnClickListener
             throw new IllegalArgumentException("SDStateLayout can only add one child");
         }
         setContentView(getChildAt(0));
+
+        getErrorView();
+        getEmptyView();
     }
 
-    private Callback getCallback()
-    {
-        if (mCallback == null)
-        {
-            mCallback = new Callback()
-            {
-                @Override
-                public void onClickErrorView(View view)
-                {
-                }
-
-                @Override
-                public void onClickEmptyView(View view)
-                {
-                }
-            };
-        }
-        return mCallback;
-    }
-
-    public interface Callback
-    {
-        void onClickErrorView(View view);
-
-        void onClickEmptyView(View view);
-    }
 }
