@@ -55,8 +55,8 @@ public class SDStateLayout extends FrameLayout
 
     public void showEmpty()
     {
-        showView(getContentView());
         showView(getEmptyView());
+        showView(getContentView());
 
         hideView(mErrorView);
     }
