@@ -127,9 +127,16 @@ public class SDStateLayout extends FrameLayout
             throw new IllegalArgumentException("SDStateLayout can only add one child");
         }
         setContentView(getChildAt(0));
-
-        getErrorView();
-        getEmptyView();
     }
 
+    public void updateState(int dataCount)
+    {
+        if (dataCount > 0)
+        {
+            showContent();
+        } else
+        {
+            showEmpty();
+        }
+    }
 }
