@@ -201,7 +201,7 @@ public class SDStateLayout extends FrameLayout
         }
     }
 
-    public void setBaseAdapter(BaseAdapter adapter)
+    public void setAdapter(BaseAdapter adapter)
     {
         BaseAdapter oldAdapter = getBaseAdapter();
         if (oldAdapter != adapter)
@@ -267,7 +267,7 @@ public class SDStateLayout extends FrameLayout
         }
     }
 
-    public void setRecyclerAdapter(RecyclerView.Adapter adapter)
+    public void setAdapter(RecyclerView.Adapter adapter)
     {
         RecyclerView.Adapter oldAdapter = getRecyclerAdapter();
         if (oldAdapter != adapter)
