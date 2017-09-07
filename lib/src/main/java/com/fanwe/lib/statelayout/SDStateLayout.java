@@ -2,6 +2,7 @@ package com.fanwe.lib.statelayout;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.BaseAdapter;
@@ -38,6 +39,9 @@ public class SDStateLayout extends FrameLayout
 
     private WeakReference<BaseAdapter> mBaseAdapter;
     private DataSetObserver mBaseAdapterDataSetObserver;
+
+    private WeakReference<RecyclerView.Adapter> mRecyclerAdapter;
+    private RecyclerView.AdapterDataObserver mRecyclerAdapterDataSetObserver;
 
     private void init(AttributeSet attrs)
     {
@@ -147,7 +151,9 @@ public class SDStateLayout extends FrameLayout
         }
     }
 
-    public BaseAdapter getAdapter()
+    //---------- BaseAdapter start ----------
+
+    public BaseAdapter getBaseAdapter()
     {
         if (mBaseAdapter != null)
         {
@@ -158,9 +164,9 @@ public class SDStateLayout extends FrameLayout
         }
     }
 
-    public void setAdapter(BaseAdapter adapter)
+    public void setBaseAdapter(BaseAdapter adapter)
     {
-        BaseAdapter oldAdapter = getAdapter();
+        BaseAdapter oldAdapter = getBaseAdapter();
         if (oldAdapter != adapter)
         {
             if (oldAdapter != null)
@@ -191,7 +197,7 @@ public class SDStateLayout extends FrameLayout
                 public void onChanged()
                 {
                     super.onChanged();
-                    BaseAdapter adapter = getAdapter();
+                    BaseAdapter adapter = getBaseAdapter();
                     if (adapter != null)
                     {
                         updateState(adapter.getCount());
@@ -207,6 +213,79 @@ public class SDStateLayout extends FrameLayout
         }
         return mBaseAdapterDataSetObserver;
     }
+
+    //---------- BaseAdapter end ----------
+
+
+    //---------- RecyclerAdapter start ----------
+
+    public RecyclerView.Adapter getRecyclerAdapter()
+    {
+        if (mRecyclerAdapter != null)
+        {
+            return mRecyclerAdapter.get();
+        } else
+        {
+            return null;
+        }
+    }
+
+    public void setRecyclerAdapter(RecyclerView.Adapter adapter)
+    {
+        RecyclerView.Adapter oldAdapter = getRecyclerAdapter();
+        if (oldAdapter != adapter)
+        {
+            if (oldAdapter != null)
+            {
+                oldAdapter.unregisterAdapterDataObserver(getRecyclerAdapterDataSetObserver());
+            }
+
+            if (adapter != null)
+            {
+                mRecyclerAdapter = new WeakReference<>(adapter);
+
+                adapter.registerAdapterDataObserver(getRecyclerAdapterDataSetObserver());
+            } else
+            {
+                mRecyclerAdapter = null;
+                mRecyclerAdapterDataSetObserver = null;
+            }
+        }
+    }
+
+    private RecyclerView.AdapterDataObserver getRecyclerAdapterDataSetObserver()
+    {
+        if (mRecyclerAdapterDataSetObserver == null)
+        {
+            mRecyclerAdapterDataSetObserver = new RecyclerView.AdapterDataObserver()
+            {
+                @Override
+                public void onChanged()
+                {
+                    super.onChanged();
+                    RecyclerView.Adapter adapter = getRecyclerAdapter();
+                    if (adapter != null)
+                    {
+                        updateState(adapter.getItemCount());
+                    }
+                }
+
+                @Override
+                public void onItemRangeRemoved(int positionStart, int itemCount)
+                {
+                    super.onItemRangeRemoved(positionStart, itemCount);
+                    RecyclerView.Adapter adapter = getRecyclerAdapter();
+                    if (adapter != null)
+                    {
+                        updateState(adapter.getItemCount());
+                    }
+                }
+            };
+        }
+        return mRecyclerAdapterDataSetObserver;
+    }
+
+    //---------- RecyclerAdapter end ----------
 
 
 }
