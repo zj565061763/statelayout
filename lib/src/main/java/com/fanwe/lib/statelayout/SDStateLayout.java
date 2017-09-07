@@ -1,9 +1,13 @@
 package com.fanwe.lib.statelayout;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by zhengjun on 2017/9/5.
@@ -31,6 +35,9 @@ public class SDStateLayout extends FrameLayout
     private View mContentView;
     private SDStateView mErrorView;
     private SDStateView mEmptyView;
+
+    private WeakReference<BaseAdapter> mBaseAdapter;
+    private DataSetObserver mBaseAdapterDataSetObserver;
 
     private void init(AttributeSet attrs)
     {
@@ -139,4 +146,67 @@ public class SDStateLayout extends FrameLayout
             showEmpty();
         }
     }
+
+    public BaseAdapter getAdapter()
+    {
+        if (mBaseAdapter != null)
+        {
+            return mBaseAdapter.get();
+        } else
+        {
+            return null;
+        }
+    }
+
+    public void setAdapter(BaseAdapter adapter)
+    {
+        BaseAdapter oldAdapter = getAdapter();
+        if (oldAdapter != adapter)
+        {
+            if (oldAdapter != null)
+            {
+                oldAdapter.unregisterDataSetObserver(getBaseAdapterDataSetObserver());
+            }
+
+            if (adapter != null)
+            {
+                mBaseAdapter = new WeakReference<>(adapter);
+
+                adapter.registerDataSetObserver(getBaseAdapterDataSetObserver());
+            } else
+            {
+                mBaseAdapter = null;
+                mBaseAdapterDataSetObserver = null;
+            }
+        }
+    }
+
+    private DataSetObserver getBaseAdapterDataSetObserver()
+    {
+        if (mBaseAdapterDataSetObserver == null)
+        {
+            mBaseAdapterDataSetObserver = new DataSetObserver()
+            {
+                @Override
+                public void onChanged()
+                {
+                    super.onChanged();
+                    BaseAdapter adapter = getAdapter();
+                    if (adapter != null)
+                    {
+                        updateState(adapter.getCount());
+                    }
+                }
+
+                @Override
+                public void onInvalidated()
+                {
+                    super.onInvalidated();
+                }
+            };
+        }
+        return mBaseAdapterDataSetObserver;
+    }
+
+
 }
