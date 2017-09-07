@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mStateLayout = (SDStateLayout) findViewById(R.id.view_state);
         mStateLayout.getErrorView().setContentView(R.layout.layout_state_error);
+
+        mStateLayout.setContentTop(false);
     }
 
     public void onClickBtn(View view)

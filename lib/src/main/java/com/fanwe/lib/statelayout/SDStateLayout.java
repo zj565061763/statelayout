@@ -33,9 +33,14 @@ public class SDStateLayout extends FrameLayout
         init(attrs);
     }
 
+    private static final float LAYER_TOP = Float.MAX_VALUE;
+    private static final float LAYER_BOTTOM = Float.MAX_VALUE;
+
     private View mContentView;
     private SDStateView mErrorView;
     private SDStateView mEmptyView;
+
+    private boolean mContentTop = true;
 
     private WeakReference<BaseAdapter> mBaseAdapter;
     private DataSetObserver mBaseAdapterDataSetObserver;
@@ -61,6 +66,14 @@ public class SDStateLayout extends FrameLayout
         showView(getErrorView());
         showView(getContentView());
 
+        if (mContentTop)
+        {
+            bringChildToFront(getContentView());
+        } else
+        {
+            bringChildToFront(getErrorView());
+        }
+
         hideView(mEmptyView);
     }
 
@@ -68,6 +81,14 @@ public class SDStateLayout extends FrameLayout
     {
         showView(getEmptyView());
         showView(getContentView());
+
+        if (mContentTop)
+        {
+            bringChildToFront(getContentView());
+        } else
+        {
+            bringChildToFront(getEmptyView());
+        }
 
         hideView(mErrorView);
     }
@@ -149,6 +170,16 @@ public class SDStateLayout extends FrameLayout
         {
             showEmpty();
         }
+    }
+
+    public boolean isContentTop()
+    {
+        return mContentTop;
+    }
+
+    public void setContentTop(boolean contentTop)
+    {
+        mContentTop = contentTop;
     }
 
     //---------- BaseAdapter start ----------
