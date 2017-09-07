@@ -33,9 +33,6 @@ public class SDStateLayout extends FrameLayout
         init(attrs);
     }
 
-    private static final float LAYER_TOP = Float.MAX_VALUE;
-    private static final float LAYER_BOTTOM = Float.MAX_VALUE;
-
     private View mContentView;
     private SDStateView mErrorView;
     private SDStateView mEmptyView;
@@ -53,6 +50,9 @@ public class SDStateLayout extends FrameLayout
 
     }
 
+    /**
+     * 显示内容
+     */
     public void showContent()
     {
         showView(getContentView());
@@ -61,6 +61,9 @@ public class SDStateLayout extends FrameLayout
         hideView(mEmptyView);
     }
 
+    /**
+     * 显示错误
+     */
     public void showError()
     {
         showView(getErrorView());
@@ -77,6 +80,9 @@ public class SDStateLayout extends FrameLayout
         hideView(mEmptyView);
     }
 
+    /**
+     * 显示无内容
+     */
     public void showEmpty()
     {
         showView(getEmptyView());
