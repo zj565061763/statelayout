@@ -8,7 +8,7 @@ allprojects {
 }
 
 dependencies {
-        compile 'com.github.zj565061763:statelayout:1.0.5'
+        compile 'com.github.zj565061763:statelayout:1.0.6'
 }
 
 ```
