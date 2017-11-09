@@ -1,14 +1,2 @@
 ## Gradle
-```
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
-}
-
-dependencies {
-        compile 'com.github.zj565061763:statelayout:1.0.6'
-}
-
-```
+[![](https://jitpack.io/v/zj565061763/statelayout.svg)](https://jitpack.io/#zj565061763/statelayout)
