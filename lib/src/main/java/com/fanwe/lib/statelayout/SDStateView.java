@@ -3,6 +3,7 @@ package com.fanwe.lib.statelayout;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 
 /**
@@ -27,8 +28,17 @@ public class SDStateView extends FrameLayout
 
     public SDStateView setContentView(int layoutId)
     {
+        View view = LayoutInflater.from(getContext()).inflate(layoutId, this, false);
+        return setContentView(view);
+    }
+
+    public SDStateView setContentView(View contentView)
+    {
         removeAllViews();
-        LayoutInflater.from(getContext()).inflate(layoutId, this, true);
+        if (contentView != null)
+        {
+            addView(contentView);
+        }
         return this;
     }
 }
