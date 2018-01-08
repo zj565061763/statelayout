@@ -9,30 +9,42 @@ import android.widget.FrameLayout;
 /**
  * Created by zhengjun on 2017/9/5.
  */
-public class SDStateView extends FrameLayout
+public class FStateView extends FrameLayout
 {
-    public SDStateView(Context context)
+    public FStateView(Context context)
     {
         super(context);
     }
 
-    public SDStateView(Context context, AttributeSet attrs)
+    public FStateView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
 
-    public SDStateView(Context context, AttributeSet attrs, int defStyleAttr)
+    public FStateView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
     }
 
-    public SDStateView setContentView(int layoutId)
+    /**
+     * 设置显示内容
+     *
+     * @param layoutId
+     * @return
+     */
+    public FStateView setContentView(int layoutId)
     {
         View view = LayoutInflater.from(getContext()).inflate(layoutId, this, false);
         return setContentView(view);
     }
 
-    public SDStateView setContentView(View contentView)
+    /**
+     * 设置显示内容
+     *
+     * @param contentView
+     * @return
+     */
+    public FStateView setContentView(View contentView)
     {
         removeAllViews();
         if (contentView != null)

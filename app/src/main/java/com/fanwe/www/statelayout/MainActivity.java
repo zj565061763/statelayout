@@ -4,19 +4,19 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.fanwe.lib.statelayout.SDStateLayout;
+import com.fanwe.lib.statelayout.FStateLayout;
 
 
 public class MainActivity extends AppCompatActivity
 {
-    private SDStateLayout mStateLayout;
+    private FStateLayout mStateLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mStateLayout = (SDStateLayout) findViewById(R.id.view_state);
+        mStateLayout = (FStateLayout) findViewById(R.id.view_state);
         mStateLayout.getErrorView().setContentView(R.layout.layout_state_error);
 
         mStateLayout.setContentTop(false);

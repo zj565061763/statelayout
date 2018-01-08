@@ -11,7 +11,7 @@
         android:onClick="onClickBtn"
         android:text="Hello World!"/>
 
-    <com.fanwe.lib.statelayout.SDStateLayout
+    <com.fanwe.lib.statelayout.FStateLayout
         android:id="@+id/view_state"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -30,6 +30,6 @@
 
         </LinearLayout>
 
-    </com.fanwe.lib.statelayout.SDStateLayout>
+    </com.fanwe.lib.statelayout.FStateLayout>
 
 </LinearLayout>
