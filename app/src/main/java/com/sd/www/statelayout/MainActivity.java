@@ -1,10 +1,10 @@
-package com.fanwe.www.statelayout;
+package com.sd.www.statelayout;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.fanwe.lib.statelayout.FStateLayout;
+import com.sd.lib.statelayout.FStateLayout;
 
 
 public class MainActivity extends AppCompatActivity
