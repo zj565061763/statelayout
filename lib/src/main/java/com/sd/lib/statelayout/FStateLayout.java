@@ -10,9 +10,6 @@ import android.widget.FrameLayout;
 
 import java.lang.ref.WeakReference;
 
-/**
- * Created by zhengjun on 2017/9/5.
- */
 public class FStateLayout extends FrameLayout
 {
     public FStateLayout(Context context)

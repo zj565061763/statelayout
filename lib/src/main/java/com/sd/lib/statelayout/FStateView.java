@@ -6,9 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-/**
- * Created by zhengjun on 2017/9/5.
- */
 public class FStateView extends FrameLayout
 {
     public FStateView(Context context)
