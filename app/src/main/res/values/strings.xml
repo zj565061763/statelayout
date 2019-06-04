@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">statelayout</string>
+
+    <!-- 全局配置的空数据布局名称 -->
+    <string name="lib_statelayout_empty_layout">layout_state_empty</string>
+
+    <!-- 全局配置的错误状态布局名称 -->
+    <string name="lib_statelayout_error_layout">layout_state_error</string>
+
 </resources>

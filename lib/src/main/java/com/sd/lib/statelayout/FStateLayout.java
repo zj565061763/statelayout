@@ -3,10 +3,14 @@ package com.sd.lib.statelayout;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class FStateLayout extends FrameLayout
 {
@@ -29,9 +33,12 @@ public class FStateLayout extends FrameLayout
     }
 
     private View mContentView;
-    private FStateView mErrorView;
-    private FStateView mEmptyView;
 
+    private FStateView mEmptyView;
+    private FStateView mErrorView;
+    private final Set<FStateView> mStateViewHolder = new HashSet<>();
+
+    private boolean mShowContentWhenState = true;
     private boolean mContentTop = true;
 
     private BaseAdapter mBaseAdapter;
@@ -46,33 +53,36 @@ public class FStateLayout extends FrameLayout
     }
 
     /**
+     * 设置显示状态view的时候是否也显示内容view，默认true-显示
+     *
+     * @param show
+     */
+    public void setShowContentWhenState(boolean show)
+    {
+        mShowContentWhenState = show;
+    }
+
+    /**
+     * 设置内容view是否在最顶层，默认true
+     *
+     * @param top true-内容view在最顶层
+     */
+    public void setContentTop(boolean top)
+    {
+        mContentTop = top;
+    }
+
+    /**
      * 显示内容
      */
     public void showContent()
     {
         showView(getContentView());
 
-        hideView(mErrorView);
-        hideView(mEmptyView);
-    }
-
-    /**
-     * 显示错误
-     */
-    public void showError()
-    {
-        showView(getErrorView());
-        showView(getContentView());
-
-        if (mContentTop)
+        for (FStateView item : mStateViewHolder)
         {
-            bringChildToFront(getContentView());
-        } else
-        {
-            bringChildToFront(getErrorView());
+            hideView(item);
         }
-
-        hideView(mEmptyView);
     }
 
     /**
@@ -80,18 +90,40 @@ public class FStateLayout extends FrameLayout
      */
     public void showEmpty()
     {
-        showView(getEmptyView());
-        showView(getContentView());
+        showStateView(getEmptyView());
+    }
+
+    /**
+     * 显示错误
+     */
+    public void showError()
+    {
+        showStateView(getErrorView());
+    }
+
+    private void showStateView(FStateView stateView)
+    {
+        showView(stateView);
+
+        if (mShowContentWhenState)
+            showView(getContentView());
+        else
+            hideView(getContentView());
 
         if (mContentTop)
         {
-            bringChildToFront(getContentView());
+            if (mShowContentWhenState)
+                bringChildToFront(getContentView());
         } else
         {
-            bringChildToFront(getEmptyView());
+            bringChildToFront(stateView);
         }
 
-        hideView(mErrorView);
+        for (FStateView item : mStateViewHolder)
+        {
+            if (item != stateView)
+                hideView(item);
+        }
     }
 
     private View getContentView()
@@ -105,7 +137,11 @@ public class FStateLayout extends FrameLayout
         {
             mErrorView = new FStateView(getContext());
             addView(mErrorView);
-            hideView(mErrorView);
+
+            final String layoutName = getResources().getString(R.string.lib_statelayout_error_layout);
+            final int layoutId = getLayoutId(getContext(), layoutName);
+            if (layoutId != 0)
+                mErrorView.setContentView(layoutId);
         }
         return mErrorView;
     }
@@ -116,7 +152,11 @@ public class FStateLayout extends FrameLayout
         {
             mEmptyView = new FStateView(getContext());
             addView(mEmptyView);
-            hideView(mEmptyView);
+
+            final String layoutName = getResources().getString(R.string.lib_statelayout_empty_layout);
+            final int layoutId = getLayoutId(getContext(), layoutName);
+            if (layoutId != 0)
+                mEmptyView.setContentView(layoutId);
         }
         return mEmptyView;
     }
@@ -124,24 +164,6 @@ public class FStateLayout extends FrameLayout
     private void setContentView(View view)
     {
         mContentView = view;
-    }
-
-    private void hideView(View view)
-    {
-        if (view == null)
-        {
-            return;
-        }
-        view.setVisibility(View.GONE);
-    }
-
-    private void showView(View view)
-    {
-        if (view == null)
-        {
-            return;
-        }
-        view.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -163,6 +185,21 @@ public class FStateLayout extends FrameLayout
             if (child != mEmptyView && child != mErrorView)
                 throw new RuntimeException("Illegal child: " + child);
         }
+
+        if (child instanceof FStateView)
+        {
+            mStateViewHolder.add((FStateView) child);
+            hideView(child);
+        }
+    }
+
+    @Override
+    public void onViewRemoved(View child)
+    {
+        super.onViewRemoved(child);
+
+        if (child instanceof FStateView)
+            mStateViewHolder.remove(child);
     }
 
     /**
@@ -179,21 +216,6 @@ public class FStateLayout extends FrameLayout
         {
             showEmpty();
         }
-    }
-
-    public boolean isContentTop()
-    {
-        return mContentTop;
-    }
-
-    /**
-     * 设置内容view是否在最顶层，默认true
-     *
-     * @param contentTop true-内容view在最顶层
-     */
-    public void setContentTop(boolean contentTop)
-    {
-        mContentTop = contentTop;
     }
 
     //---------- BaseAdapter start ----------
@@ -303,5 +325,29 @@ public class FStateLayout extends FrameLayout
 
     //---------- RecyclerAdapter end ----------
 
+    private static void hideView(View view)
+    {
+        if (view != null && view.getVisibility() != GONE)
+            view.setVisibility(GONE);
+    }
 
+    private static void showView(View view)
+    {
+        if (view != null && view.getVisibility() != VISIBLE)
+            view.setVisibility(VISIBLE);
+    }
+
+    private static int getLayoutId(Context context, String name)
+    {
+        if (TextUtils.isEmpty(name))
+            return 0;
+
+        try
+        {
+            return context.getResources().getIdentifier(name, "layout", context.getPackageName());
+        } catch (Exception e)
+        {
+            return 0;
+        }
+    }
 }

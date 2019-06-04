@@ -31,7 +31,7 @@ public class FStateView extends FrameLayout
      */
     public FStateView setContentView(int layoutId)
     {
-        View view = LayoutInflater.from(getContext()).inflate(layoutId, this, false);
+        final View view = LayoutInflater.from(getContext()).inflate(layoutId, this, false);
         return setContentView(view);
     }
 
@@ -45,9 +45,8 @@ public class FStateView extends FrameLayout
     {
         removeAllViews();
         if (contentView != null)
-        {
             addView(contentView);
-        }
+
         return this;
     }
 }

@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">lib</string>
+    <!-- 全局配置的空数据布局名称 -->
+    <string name="lib_statelayout_empty_layout"></string>
+
+    <!-- 全局配置的错误状态布局名称 -->
+    <string name="lib_statelayout_error_layout"></string>
 </resources>
