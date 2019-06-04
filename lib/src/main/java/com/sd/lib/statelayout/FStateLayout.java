@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 
-import java.lang.ref.WeakReference;
-
 public class FStateLayout extends FrameLayout
 {
     public FStateLayout(Context context)
@@ -36,10 +34,10 @@ public class FStateLayout extends FrameLayout
 
     private boolean mContentTop = true;
 
-    private WeakReference<BaseAdapter> mBaseAdapter;
+    private BaseAdapter mBaseAdapter;
     private DataSetObserver mBaseAdapterDataSetObserver;
 
-    private WeakReference<RecyclerView.Adapter> mRecyclerAdapter;
+    private RecyclerView.Adapter mRecyclerAdapter;
     private RecyclerView.AdapterDataObserver mRecyclerAdapterDataSetObserver;
 
     private void init(AttributeSet attrs)
@@ -150,12 +148,21 @@ public class FStateLayout extends FrameLayout
     protected void onFinishInflate()
     {
         super.onFinishInflate();
+        if (getChildCount() > 1)
+            throw new RuntimeException(FStateLayout.class.getSimpleName() + " can only add one child");
 
+        setContentView(getChildAt(0));
+    }
+
+    @Override
+    public void onViewAdded(View child)
+    {
+        super.onViewAdded(child);
         if (getChildCount() > 1)
         {
-            throw new IllegalArgumentException("SDStateLayout can only add one child");
+            if (child != mEmptyView && child != mErrorView)
+                throw new RuntimeException("Illegal child: " + child);
         }
-        setContentView(getChildAt(0));
     }
 
     /**
@@ -191,17 +198,6 @@ public class FStateLayout extends FrameLayout
 
     //---------- BaseAdapter start ----------
 
-    public BaseAdapter getBaseAdapter()
-    {
-        if (mBaseAdapter != null)
-        {
-            return mBaseAdapter.get();
-        } else
-        {
-            return null;
-        }
-    }
-
     /**
      * 设置要监听的适配器
      *
@@ -209,22 +205,18 @@ public class FStateLayout extends FrameLayout
      */
     public void setAdapter(BaseAdapter adapter)
     {
-        BaseAdapter oldAdapter = getBaseAdapter();
-        if (oldAdapter != adapter)
+        if (mBaseAdapter != adapter)
         {
-            if (oldAdapter != null)
-            {
-                oldAdapter.unregisterDataSetObserver(getBaseAdapterDataSetObserver());
-            }
+            if (mBaseAdapter != null)
+                mBaseAdapter.unregisterDataSetObserver(getBaseAdapterDataSetObserver());
+
+            mBaseAdapter = adapter;
 
             if (adapter != null)
             {
-                mBaseAdapter = new WeakReference<>(adapter);
-
                 adapter.registerDataSetObserver(getBaseAdapterDataSetObserver());
             } else
             {
-                mBaseAdapter = null;
                 mBaseAdapterDataSetObserver = null;
             }
         }
@@ -240,11 +232,8 @@ public class FStateLayout extends FrameLayout
                 public void onChanged()
                 {
                     super.onChanged();
-                    BaseAdapter adapter = getBaseAdapter();
-                    if (adapter != null)
-                    {
-                        updateState(adapter.getCount());
-                    }
+                    if (mBaseAdapter != null)
+                        updateState(mBaseAdapter.getCount());
                 }
 
                 @Override
@@ -262,17 +251,6 @@ public class FStateLayout extends FrameLayout
 
     //---------- RecyclerAdapter start ----------
 
-    public RecyclerView.Adapter getRecyclerAdapter()
-    {
-        if (mRecyclerAdapter != null)
-        {
-            return mRecyclerAdapter.get();
-        } else
-        {
-            return null;
-        }
-    }
-
     /**
      * 设置要监听的适配器
      *
@@ -280,22 +258,18 @@ public class FStateLayout extends FrameLayout
      */
     public void setAdapter(RecyclerView.Adapter adapter)
     {
-        RecyclerView.Adapter oldAdapter = getRecyclerAdapter();
-        if (oldAdapter != adapter)
+        if (mRecyclerAdapter != adapter)
         {
-            if (oldAdapter != null)
-            {
-                oldAdapter.unregisterAdapterDataObserver(getRecyclerAdapterDataSetObserver());
-            }
+            if (mRecyclerAdapter != null)
+                mRecyclerAdapter.unregisterAdapterDataObserver(getRecyclerAdapterDataSetObserver());
+
+            mRecyclerAdapter = adapter;
 
             if (adapter != null)
             {
-                mRecyclerAdapter = new WeakReference<>(adapter);
-
                 adapter.registerAdapterDataObserver(getRecyclerAdapterDataSetObserver());
             } else
             {
-                mRecyclerAdapter = null;
                 mRecyclerAdapterDataSetObserver = null;
             }
         }
@@ -311,22 +285,16 @@ public class FStateLayout extends FrameLayout
                 public void onChanged()
                 {
                     super.onChanged();
-                    RecyclerView.Adapter adapter = getRecyclerAdapter();
-                    if (adapter != null)
-                    {
-                        updateState(adapter.getItemCount());
-                    }
+                    if (mRecyclerAdapter != null)
+                        updateState(mRecyclerAdapter.getItemCount());
                 }
 
                 @Override
                 public void onItemRangeRemoved(int positionStart, int itemCount)
                 {
                     super.onItemRangeRemoved(positionStart, itemCount);
-                    RecyclerView.Adapter adapter = getRecyclerAdapter();
-                    if (adapter != null)
-                    {
-                        updateState(adapter.getItemCount());
-                    }
+                    if (mRecyclerAdapter != null)
+                        updateState(mRecyclerAdapter.getItemCount());
                 }
             };
         }
