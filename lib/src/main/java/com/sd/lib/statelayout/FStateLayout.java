@@ -283,9 +283,13 @@ public class FStateLayout extends FrameLayout
                     throw new RuntimeException("Strategy result is null");
 
                 if (result == FStateEmptyStrategy.Result.Empty)
-                    setShowType(ShowType.Empty);
-                else if (result == FStateEmptyStrategy.Result.Content)
+                {
+                    if (getShowType() == ShowType.Content)
+                        setShowType(ShowType.Empty);
+                } else if (result == FStateEmptyStrategy.Result.Content)
+                {
                     setShowType(ShowType.Content);
+                }
             } else
             {
                 mContentListener.stop();
