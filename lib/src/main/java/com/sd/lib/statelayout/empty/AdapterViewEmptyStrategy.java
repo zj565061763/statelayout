@@ -3,30 +3,25 @@ package com.sd.lib.statelayout.empty;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 
-import com.sd.lib.statelayout.FStateLayout;
-
-public class AdapterViewEmptyStrategy implements FStateEmptyStrategy
+public class AdapterViewEmptyStrategy extends SourceCountEmptyStrategy<AdapterView>
 {
-    private final AdapterView mView;
-
-    public AdapterViewEmptyStrategy(AdapterView view)
+    public AdapterViewEmptyStrategy(AdapterView source)
     {
-        mView = view;
+        super(source);
+    }
+
+    public AdapterViewEmptyStrategy(AdapterView source, int emptyCount)
+    {
+        super(source, emptyCount);
     }
 
     @Override
-    public Result getResult(FStateLayout.ShowType showType)
+    protected int getCount()
     {
-        if (showType == FStateLayout.ShowType.Error)
-            return Result.None;
-
-        if (mView == null)
-            return Result.None;
-
-        final Adapter adapter = mView.getAdapter();
+        final Adapter adapter = getSource().getAdapter();
         if (adapter == null)
-            return Result.None;
+            return -1;
 
-        return adapter.getCount() <= 0 ? Result.Empty : Result.Content;
+        return adapter.getCount();
     }
 }

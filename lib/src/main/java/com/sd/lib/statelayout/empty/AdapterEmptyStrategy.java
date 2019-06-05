@@ -2,26 +2,21 @@ package com.sd.lib.statelayout.empty;
 
 import android.widget.Adapter;
 
-import com.sd.lib.statelayout.FStateLayout;
-
-public class AdapterEmptyStrategy implements FStateEmptyStrategy
+public class AdapterEmptyStrategy extends SourceCountEmptyStrategy<Adapter>
 {
-    private final Adapter mAdapter;
-
-    public AdapterEmptyStrategy(Adapter adapter)
+    public AdapterEmptyStrategy(Adapter source)
     {
-        mAdapter = adapter;
+        super(source);
+    }
+
+    public AdapterEmptyStrategy(Adapter source, int emptyCount)
+    {
+        super(source, emptyCount);
     }
 
     @Override
-    public Result getResult(FStateLayout.ShowType showType)
+    protected int getCount()
     {
-        if (showType == FStateLayout.ShowType.Error)
-            return Result.None;
-
-        if (mAdapter == null)
-            return Result.None;
-
-        return mAdapter.getCount() <= 0 ? Result.Empty : Result.Content;
+        return getSource().getCount();
     }
 }

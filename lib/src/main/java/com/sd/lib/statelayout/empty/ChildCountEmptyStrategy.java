@@ -2,36 +2,21 @@ package com.sd.lib.statelayout.empty;
 
 import android.view.ViewGroup;
 
-import com.sd.lib.statelayout.FStateLayout;
-
-public class ChildCountEmptyStrategy implements FStateEmptyStrategy
+public class ChildCountEmptyStrategy extends SourceCountEmptyStrategy<ViewGroup>
 {
-    private final ViewGroup mViewGroup;
-    private final int mEmptyCount;
-
-    public ChildCountEmptyStrategy(ViewGroup viewGroup)
+    public ChildCountEmptyStrategy(ViewGroup source)
     {
-        this(viewGroup, 0);
+        super(source);
     }
 
-    public ChildCountEmptyStrategy(ViewGroup viewGroup, int emptyCount)
+    public ChildCountEmptyStrategy(ViewGroup source, int emptyCount)
     {
-        if (emptyCount < 0)
-            emptyCount = 0;
-
-        mViewGroup = viewGroup;
-        mEmptyCount = emptyCount;
+        super(source, emptyCount);
     }
 
     @Override
-    public Result getResult(FStateLayout.ShowType showType)
+    protected int getCount()
     {
-        if (showType == FStateLayout.ShowType.Error)
-            return Result.None;
-
-        if (mViewGroup == null)
-            return Result.None;
-
-        return mViewGroup.getChildCount() <= mEmptyCount ? Result.Empty : Result.Content;
+        return getSource().getChildCount();
     }
 }

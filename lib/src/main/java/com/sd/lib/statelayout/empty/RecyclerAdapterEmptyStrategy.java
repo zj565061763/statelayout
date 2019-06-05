@@ -2,26 +2,21 @@ package com.sd.lib.statelayout.empty;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.sd.lib.statelayout.FStateLayout;
-
-public class RecyclerAdapterEmptyStrategy implements FStateEmptyStrategy
+public class RecyclerAdapterEmptyStrategy extends SourceCountEmptyStrategy<RecyclerView.Adapter>
 {
-    private RecyclerView.Adapter mAdapter;
-
-    public RecyclerAdapterEmptyStrategy(RecyclerView.Adapter adapter)
+    public RecyclerAdapterEmptyStrategy(RecyclerView.Adapter source)
     {
-        mAdapter = adapter;
+        super(source);
+    }
+
+    public RecyclerAdapterEmptyStrategy(RecyclerView.Adapter source, int emptyCount)
+    {
+        super(source, emptyCount);
     }
 
     @Override
-    public Result getResult(FStateLayout.ShowType showType)
+    protected int getCount()
     {
-        if (showType == FStateLayout.ShowType.Error)
-            return Result.None;
-
-        if (mAdapter == null)
-            return Result.None;
-
-        return mAdapter.getItemCount() <= 0 ? Result.Empty : Result.Content;
+        return getSource().getItemCount();
     }
 }

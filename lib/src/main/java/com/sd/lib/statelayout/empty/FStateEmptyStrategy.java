@@ -7,7 +7,9 @@ import com.sd.lib.statelayout.FStateLayout;
  */
 public interface FStateEmptyStrategy
 {
-    Result getResult(FStateLayout.ShowType showType);
+    boolean isDestroyed();
+
+    Result getResult();
 
     enum Result
     {
