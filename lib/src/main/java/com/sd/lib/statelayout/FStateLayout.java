@@ -79,7 +79,7 @@ public class FStateLayout extends FrameLayout
         {
             mEmptyStrategy = strategy;
             if (strategy != null)
-                mViewListener.start();
+                mContentListener.start();
         }
     }
 
@@ -172,7 +172,7 @@ public class FStateLayout extends FrameLayout
 
     private View getContentView()
     {
-        return mViewListener.getView();
+        return mContentListener.getView();
     }
 
     public IStateView getErrorView()
@@ -216,7 +216,7 @@ public class FStateLayout extends FrameLayout
      */
     public void setContentView(View view)
     {
-        mViewListener.setView(view);
+        mContentListener.setView(view);
     }
 
     @Override
@@ -251,17 +251,17 @@ public class FStateLayout extends FrameLayout
     protected void onAttachedToWindow()
     {
         super.onAttachedToWindow();
-        mViewListener.start();
+        mContentListener.start();
     }
 
     @Override
     protected void onDetachedFromWindow()
     {
         super.onDetachedFromWindow();
-        mViewListener.stop();
+        mContentListener.stop();
     }
 
-    private final FViewListener<View> mViewListener = new FViewListener<View>()
+    private final FViewListener<View> mContentListener = new FViewListener<View>()
     {
         @Override
         protected void onUpdate(View view)
@@ -278,7 +278,7 @@ public class FStateLayout extends FrameLayout
                     setShowType(ShowType.Content);
             } else
             {
-                mViewListener.stop();
+                mContentListener.stop();
             }
         }
     };
