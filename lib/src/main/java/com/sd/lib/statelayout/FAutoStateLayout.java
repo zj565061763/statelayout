@@ -38,6 +38,12 @@ public class FAutoStateLayout extends FStateLayout
     {
         super.onContentViewChanged(oldView, newView);
         autoEmptyStrategy(newView);
+
+        if (newView == null)
+        {
+            if (getEmptyStrategy() instanceof AutoEmptyStrategy)
+                setEmptyStrategy(null);
+        }
     }
 
     private void autoEmptyStrategy(View view)
@@ -65,11 +71,35 @@ public class FAutoStateLayout extends FStateLayout
 
         if (count == 1)
         {
-            setEmptyStrategy(listStrategy.get(0));
+            setEmptyStrategy(new AutoEmptyStrategy(listStrategy.get(0)));
         } else
         {
             final FStateEmptyStrategy[] array = new FStateEmptyStrategy[count];
-            setEmptyStrategy(new CombineEmptyStrategy(listStrategy.toArray(array)));
+            setEmptyStrategy(new AutoEmptyStrategy(new CombineEmptyStrategy(listStrategy.toArray(array))));
+        }
+    }
+
+    private static class AutoEmptyStrategy implements FStateEmptyStrategy
+    {
+        private final FStateEmptyStrategy mStrategy;
+
+        public AutoEmptyStrategy(FStateEmptyStrategy strategy)
+        {
+            if (strategy == null)
+                throw new IllegalArgumentException("strategy is null when create " + AutoEmptyStrategy.class.getSimpleName());
+            mStrategy = strategy;
+        }
+
+        @Override
+        public boolean isDestroyed()
+        {
+            return mStrategy.isDestroyed();
+        }
+
+        @Override
+        public Result getResult()
+        {
+            return mStrategy.getResult();
         }
     }
 

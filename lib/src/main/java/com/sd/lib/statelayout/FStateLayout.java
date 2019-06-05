@@ -71,6 +71,16 @@ public class FStateLayout extends FrameLayout
     /**
      * {@link FStateEmptyStrategy}
      *
+     * @return
+     */
+    public FStateEmptyStrategy getEmptyStrategy()
+    {
+        return mEmptyStrategy;
+    }
+
+    /**
+     * {@link FStateEmptyStrategy}
+     *
      * @param strategy
      */
     public void setEmptyStrategy(FStateEmptyStrategy strategy)
