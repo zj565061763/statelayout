@@ -32,11 +32,19 @@ public class FStateLayout extends FrameLayout
         init(attrs);
     }
 
+    public enum ShowType
+    {
+        Content,
+        Empty,
+        Error,
+    }
+
+    private ShowType mShowType = ShowType.Content;
     private View mContentView;
 
-    private FStateView mEmptyView;
-    private FStateView mErrorView;
-    private final Set<FStateView> mStateViewHolder = new HashSet<>();
+    private IStateView mEmptyView;
+    private IStateView mErrorView;
+    private final Set<IStateView> mStateViewHolder = new HashSet<>();
 
     private boolean mShowContentWhenState = true;
     private boolean mContentTop = true;
@@ -50,6 +58,16 @@ public class FStateLayout extends FrameLayout
     private void init(AttributeSet attrs)
     {
 
+    }
+
+    /**
+     * 返回当前显示的类型
+     *
+     * @return
+     */
+    public ShowType getShowType()
+    {
+        return mShowType;
     }
 
     /**
@@ -73,37 +91,43 @@ public class FStateLayout extends FrameLayout
     }
 
     /**
-     * 显示内容
+     * 设置显示类型
+     *
+     * @param showType
      */
-    public void showContent()
+    public void setShowType(ShowType showType)
     {
-        showView(getContentView());
+        if (showType == null)
+            return;
 
-        for (FStateView item : mStateViewHolder)
+        mShowType = showType;
+
+        switch (mShowType)
         {
-            hideView(item);
+            case Content:
+                showView(getContentView());
+                hideStateView();
+                break;
+            case Empty:
+                showStateView(getEmptyView());
+                break;
+            case Error:
+                showStateView(getErrorView());
+                break;
         }
     }
 
-    /**
-     * 显示无内容
-     */
-    public void showEmpty()
+    private void hideStateView()
     {
-        showStateView(getEmptyView());
+        for (IStateView item : mStateViewHolder)
+        {
+            hideView((View) item);
+        }
     }
 
-    /**
-     * 显示错误
-     */
-    public void showError()
+    private void showStateView(IStateView stateView)
     {
-        showStateView(getErrorView());
-    }
-
-    private void showStateView(FStateView stateView)
-    {
-        showView(stateView);
+        showView((View) stateView);
 
         if (mShowContentWhenState)
             showView(getContentView());
@@ -116,13 +140,13 @@ public class FStateLayout extends FrameLayout
                 bringChildToFront(getContentView());
         } else
         {
-            bringChildToFront(stateView);
+            bringChildToFront((View) stateView);
         }
 
-        for (FStateView item : mStateViewHolder)
+        for (IStateView item : mStateViewHolder)
         {
             if (item != stateView)
-                hideView(item);
+                hideView((View) item);
         }
     }
 
@@ -131,12 +155,14 @@ public class FStateLayout extends FrameLayout
         return mContentView;
     }
 
-    public FStateView getErrorView()
+    public IStateView getErrorView()
     {
         if (mErrorView == null)
         {
-            mErrorView = new FStateView(getContext());
-            addView(mErrorView);
+            final SimpleStateView simpleStateView = new SimpleStateView(getContext());
+            mErrorView = simpleStateView;
+
+            addView(simpleStateView);
 
             final String layoutName = getResources().getString(R.string.lib_statelayout_error_layout);
             final int layoutId = getLayoutId(getContext(), layoutName);
@@ -146,12 +172,14 @@ public class FStateLayout extends FrameLayout
         return mErrorView;
     }
 
-    public FStateView getEmptyView()
+    public IStateView getEmptyView()
     {
         if (mEmptyView == null)
         {
-            mEmptyView = new FStateView(getContext());
-            addView(mEmptyView);
+            final SimpleStateView simpleStateView = new SimpleStateView(getContext());
+            mEmptyView = simpleStateView;
+
+            addView(simpleStateView);
 
             final String layoutName = getResources().getString(R.string.lib_statelayout_empty_layout);
             final int layoutId = getLayoutId(getContext(), layoutName);
@@ -161,9 +189,24 @@ public class FStateLayout extends FrameLayout
         return mEmptyView;
     }
 
-    private void setContentView(View view)
+    /**
+     * 设置内容View
+     *
+     * @param view
+     */
+    public void setContentView(View view)
     {
-        mContentView = view;
+        if (mContentView != view)
+        {
+            removeView(mContentView);
+
+            mContentView = view;
+
+            if (view.getParent() != this)
+                addView(view);
+
+            setShowType(getShowType());
+        }
     }
 
     @Override
@@ -186,9 +229,9 @@ public class FStateLayout extends FrameLayout
                 throw new RuntimeException("Illegal child: " + child);
         }
 
-        if (child instanceof FStateView)
+        if (child instanceof IStateView)
         {
-            mStateViewHolder.add((FStateView) child);
+            mStateViewHolder.add((IStateView) child);
             hideView(child);
         }
     }
@@ -198,7 +241,7 @@ public class FStateLayout extends FrameLayout
     {
         super.onViewRemoved(child);
 
-        if (child instanceof FStateView)
+        if (child instanceof IStateView)
             mStateViewHolder.remove(child);
     }
 
@@ -211,10 +254,10 @@ public class FStateLayout extends FrameLayout
     {
         if (dataCount > 0)
         {
-            showContent();
+            setShowType(ShowType.Content);
         } else
         {
-            showEmpty();
+            setShowType(ShowType.Empty);
         }
     }
 

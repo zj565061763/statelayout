@@ -22,6 +22,6 @@ public class MainActivity extends AppCompatActivity
 
     public void onClickBtn(View view)
     {
-        mStateLayout.showError();
+        mStateLayout.setShowType(FStateLayout.ShowType.Error);
     }
 }
