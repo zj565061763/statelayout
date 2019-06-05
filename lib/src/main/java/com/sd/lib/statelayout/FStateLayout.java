@@ -95,6 +95,8 @@ public class FStateLayout extends FrameLayout
 
     /**
      * 设置内容view是否在最顶层，默认true
+     * <p>
+     * 内容view是当前FStateLayout的child才有效
      *
      * @param top true-内容view在最顶层
      */
