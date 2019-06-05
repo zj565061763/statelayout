@@ -15,7 +15,7 @@ class SimpleStateView extends FrameLayout implements IStateView
     @Override
     public void setContentView(int layoutId)
     {
-        final View view = LayoutInflater.from(getContext()).inflate(layoutId, this, false);
+        final View view = layoutId == 0 ? null : LayoutInflater.from(getContext()).inflate(layoutId, this, false);
         setContentView(view);
     }
 

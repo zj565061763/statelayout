@@ -1,13 +1,16 @@
 package com.sd.lib.statelayout;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+
+import com.sd.lib.statelayout.empty.AdapterEmptyStrategy;
+import com.sd.lib.statelayout.empty.FStateEmptyStrategy;
+import com.sd.lib.statelayout.empty.RecyclerAdapterEmptyStrategy;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,13 +37,12 @@ public class FStateLayout extends FrameLayout
 
     public enum ShowType
     {
-        Content,
         Empty,
         Error,
+        Content,
     }
 
     private ShowType mShowType = ShowType.Content;
-    private View mContentView;
 
     private IStateView mEmptyView;
     private IStateView mErrorView;
@@ -49,11 +51,7 @@ public class FStateLayout extends FrameLayout
     private boolean mShowContentWhenState = true;
     private boolean mContentTop = true;
 
-    private BaseAdapter mBaseAdapter;
-    private DataSetObserver mBaseAdapterDataSetObserver;
-
-    private RecyclerView.Adapter mRecyclerAdapter;
-    private RecyclerView.AdapterDataObserver mRecyclerAdapterDataSetObserver;
+    private FStateEmptyStrategy mEmptyStrategy;
 
     private void init(AttributeSet attrs)
     {
@@ -68,6 +66,21 @@ public class FStateLayout extends FrameLayout
     public ShowType getShowType()
     {
         return mShowType;
+    }
+
+    /**
+     * {@link FStateEmptyStrategy}
+     *
+     * @param strategy
+     */
+    public void setEmptyStrategy(FStateEmptyStrategy strategy)
+    {
+        if (mEmptyStrategy != strategy)
+        {
+            mEmptyStrategy = strategy;
+            if (strategy != null)
+                mViewListener.start();
+        }
     }
 
     /**
@@ -98,10 +111,17 @@ public class FStateLayout extends FrameLayout
     public void setShowType(ShowType showType)
     {
         if (showType == null)
-            return;
+            throw new IllegalArgumentException("showType is null");
 
-        mShowType = showType;
+        if (mShowType != showType)
+        {
+            mShowType = showType;
+            updateShowTypeInternal();
+        }
+    }
 
+    private void updateShowTypeInternal()
+    {
         switch (mShowType)
         {
             case Content:
@@ -152,7 +172,7 @@ public class FStateLayout extends FrameLayout
 
     private View getContentView()
     {
-        return mContentView;
+        return mViewListener.getView();
     }
 
     public IStateView getErrorView()
@@ -162,13 +182,12 @@ public class FStateLayout extends FrameLayout
             final SimpleStateView simpleStateView = new SimpleStateView(getContext());
             mErrorView = simpleStateView;
 
+            final int layoutId = getLayoutId(getContext(), getResources().getString(R.string.lib_statelayout_error_layout));
+            mErrorView.setContentView(layoutId);
+
             addView(simpleStateView);
             hideView(simpleStateView);
-
-            final String layoutName = getResources().getString(R.string.lib_statelayout_error_layout);
-            final int layoutId = getLayoutId(getContext(), layoutName);
-            if (layoutId != 0)
-                mErrorView.setContentView(layoutId);
+            mStateViewHolder.add(simpleStateView);
         }
         return mErrorView;
     }
@@ -180,13 +199,12 @@ public class FStateLayout extends FrameLayout
             final SimpleStateView simpleStateView = new SimpleStateView(getContext());
             mEmptyView = simpleStateView;
 
+            final int layoutId = getLayoutId(getContext(), getResources().getString(R.string.lib_statelayout_empty_layout));
+            mEmptyView.setContentView(layoutId);
+
             addView(simpleStateView);
             hideView(simpleStateView);
-
-            final String layoutName = getResources().getString(R.string.lib_statelayout_empty_layout);
-            final int layoutId = getLayoutId(getContext(), layoutName);
-            if (layoutId != 0)
-                mEmptyView.setContentView(layoutId);
+            mStateViewHolder.add(simpleStateView);
         }
         return mEmptyView;
     }
@@ -198,45 +216,23 @@ public class FStateLayout extends FrameLayout
      */
     public void setContentView(View view)
     {
-        final View old = mContentView;
-        if (old != view)
-        {
-            mContentView = view;
-
-            removeView(old);
-
-            if (view != null)
-            {
-                if (view.getParent() != this)
-                    addView(view);
-            }
-
-            setShowType(getShowType());
-        }
-    }
-
-    @Override
-    protected void onFinishInflate()
-    {
-        super.onFinishInflate();
-        if (getChildCount() > 1)
-            throw new RuntimeException(FStateLayout.class.getSimpleName() + " can only add one child");
-
-        setContentView(getChildAt(0));
+        mViewListener.setView(view);
     }
 
     @Override
     public void onViewAdded(View child)
     {
         super.onViewAdded(child);
-        if (getChildCount() > 1)
+
+        final int count = getChildCount();
+        if (count == 1)
+        {
+            setContentView(getChildAt(0));
+        } else if (count > 1)
         {
             if (child != mEmptyView && child != mErrorView)
                 throw new RuntimeException("Illegal child: " + child);
         }
-
-        if (child instanceof IStateView)
-            mStateViewHolder.add((IStateView) child);
     }
 
     @Override
@@ -244,18 +240,55 @@ public class FStateLayout extends FrameLayout
     {
         super.onViewRemoved(child);
 
-        if (child == mContentView)
-            throw new RuntimeException("You can not remove content view this way");
+        if (getContentView() == child)
+            setContentView(null);
 
         if (child instanceof IStateView)
             mStateViewHolder.remove(child);
     }
 
+    @Override
+    protected void onAttachedToWindow()
+    {
+        super.onAttachedToWindow();
+        mViewListener.start();
+    }
+
+    @Override
+    protected void onDetachedFromWindow()
+    {
+        super.onDetachedFromWindow();
+        mViewListener.stop();
+    }
+
+    private final FViewListener<View> mViewListener = new FViewListener<View>()
+    {
+        @Override
+        protected void onUpdate(View view)
+        {
+            if (mEmptyStrategy != null)
+            {
+                final FStateEmptyStrategy.Result result = mEmptyStrategy.getResult(getShowType());
+                if (result == null)
+                    throw new RuntimeException("Strategy result is null");
+
+                if (result == FStateEmptyStrategy.Result.Empty)
+                    setShowType(ShowType.Empty);
+                else
+                    setShowType(ShowType.Content);
+            } else
+            {
+                mViewListener.stop();
+            }
+        }
+    };
+
     /**
-     * 更新状态view
+     * 用{@link #setShowType(ShowType)} 替代
      *
-     * @param dataCount 数据数量大于0，显示内容；数据数量小于等于0，显示空内容
+     * @param dataCount
      */
+    @Deprecated
     public void updateState(int dataCount)
     {
         if (dataCount > 0)
@@ -267,112 +300,27 @@ public class FStateLayout extends FrameLayout
         }
     }
 
-    //---------- BaseAdapter start ----------
-
     /**
-     * 设置要监听的适配器
+     * 用{@link #setEmptyStrategy(FStateEmptyStrategy)}替代
      *
      * @param adapter
      */
+    @Deprecated
     public void setAdapter(BaseAdapter adapter)
     {
-        if (mBaseAdapter != adapter)
-        {
-            if (mBaseAdapter != null)
-                mBaseAdapter.unregisterDataSetObserver(getBaseAdapterDataSetObserver());
-
-            mBaseAdapter = adapter;
-
-            if (adapter != null)
-            {
-                adapter.registerDataSetObserver(getBaseAdapterDataSetObserver());
-            } else
-            {
-                mBaseAdapterDataSetObserver = null;
-            }
-        }
+        setEmptyStrategy(new AdapterEmptyStrategy(adapter));
     }
-
-    private DataSetObserver getBaseAdapterDataSetObserver()
-    {
-        if (mBaseAdapterDataSetObserver == null)
-        {
-            mBaseAdapterDataSetObserver = new DataSetObserver()
-            {
-                @Override
-                public void onChanged()
-                {
-                    super.onChanged();
-                    if (mBaseAdapter != null)
-                        updateState(mBaseAdapter.getCount());
-                }
-
-                @Override
-                public void onInvalidated()
-                {
-                    super.onInvalidated();
-                }
-            };
-        }
-        return mBaseAdapterDataSetObserver;
-    }
-
-    //---------- BaseAdapter end ----------
-
-
-    //---------- RecyclerAdapter start ----------
 
     /**
-     * 设置要监听的适配器
+     * 用{@link #setEmptyStrategy(FStateEmptyStrategy)}替代
      *
      * @param adapter
      */
+    @Deprecated
     public void setAdapter(RecyclerView.Adapter adapter)
     {
-        if (mRecyclerAdapter != adapter)
-        {
-            if (mRecyclerAdapter != null)
-                mRecyclerAdapter.unregisterAdapterDataObserver(getRecyclerAdapterDataSetObserver());
-
-            mRecyclerAdapter = adapter;
-
-            if (adapter != null)
-            {
-                adapter.registerAdapterDataObserver(getRecyclerAdapterDataSetObserver());
-            } else
-            {
-                mRecyclerAdapterDataSetObserver = null;
-            }
-        }
+        setEmptyStrategy(new RecyclerAdapterEmptyStrategy(adapter));
     }
-
-    private RecyclerView.AdapterDataObserver getRecyclerAdapterDataSetObserver()
-    {
-        if (mRecyclerAdapterDataSetObserver == null)
-        {
-            mRecyclerAdapterDataSetObserver = new RecyclerView.AdapterDataObserver()
-            {
-                @Override
-                public void onChanged()
-                {
-                    super.onChanged();
-                    if (mRecyclerAdapter != null)
-                        updateState(mRecyclerAdapter.getItemCount());
-                }
-
-                @Override
-                public void onItemRangeRemoved(int positionStart, int itemCount)
-                {
-                    super.onItemRangeRemoved(positionStart, itemCount);
-                    if (mRecyclerAdapter != null)
-                        updateState(mRecyclerAdapter.getItemCount());
-                }
-            };
-        }
-        return mRecyclerAdapterDataSetObserver;
-    }
-
-    //---------- RecyclerAdapter end ----------
 
     private static void hideView(View view)
     {
