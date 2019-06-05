@@ -80,6 +80,8 @@ public class FStateLayout extends FrameLayout
             mEmptyStrategy = strategy;
             if (strategy != null)
                 mContentListener.start();
+            else
+                mContentListener.stop();
         }
     }
 
@@ -289,7 +291,18 @@ public class FStateLayout extends FrameLayout
                 mContentListener.stop();
             }
         }
+
+        @Override
+        protected void onViewChanged(View oldView, View newView)
+        {
+            super.onViewChanged(oldView, newView);
+            onContentViewChanged(oldView, newView);
+        }
     };
+
+    protected void onContentViewChanged(View oldView, View newView)
+    {
+    }
 
     /**
      * 用{@link #setShowType(ShowType)} 替代

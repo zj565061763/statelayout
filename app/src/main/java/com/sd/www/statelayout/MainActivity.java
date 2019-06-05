@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.sd.lib.adapter.FSimpleAdapter;
 import com.sd.lib.statelayout.FStateLayout;
+import com.sd.lib.statelayout.empty.AdapterViewEmptyStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity
 
         lv_content.setAdapter(mAdapter);
 
-        mStateLayout.setAdapter(mAdapter);
+        mStateLayout.setEmptyStrategy(new AdapterViewEmptyStrategy(lv_content));
     }
 
     public void onClickBtn(View view)
