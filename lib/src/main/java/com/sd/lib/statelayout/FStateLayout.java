@@ -198,14 +198,18 @@ public class FStateLayout extends FrameLayout
      */
     public void setContentView(View view)
     {
-        if (mContentView != view)
+        final View old = mContentView;
+        if (old != view)
         {
-            removeView(mContentView);
-
             mContentView = view;
 
-            if (view.getParent() != this)
-                addView(view);
+            removeView(old);
+
+            if (view != null)
+            {
+                if (view.getParent() != this)
+                    addView(view);
+            }
 
             setShowType(getShowType());
         }
@@ -239,6 +243,9 @@ public class FStateLayout extends FrameLayout
     public void onViewRemoved(View child)
     {
         super.onViewRemoved(child);
+
+        if (child == mContentView)
+            throw new RuntimeException("You can not remove content view this way");
 
         if (child instanceof IStateView)
             mStateViewHolder.remove(child);
