@@ -45,6 +45,9 @@ public class CombineEmptyStrategy implements FStateEmptyStrategy
             }
         }
 
+        if (mList.isEmpty())
+            return Result.None;
+
         return Result.Empty;
     }
 }

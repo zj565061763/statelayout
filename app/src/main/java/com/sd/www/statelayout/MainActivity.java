@@ -8,30 +8,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sd.lib.adapter.FSimpleAdapter;
-import com.sd.lib.statelayout.FStateLayout;
-import com.sd.lib.statelayout.empty.AdapterViewEmptyStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
-    private FStateLayout mStateLayout;
-
     private ListView lv_content;
-    private List<String> mListModel = new ArrayList<>();
+    private final List<String> mListModel = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mStateLayout = findViewById(R.id.view_state);
         lv_content = findViewById(R.id.lv_content);
-
         lv_content.setAdapter(mAdapter);
-
-        mStateLayout.setEmptyStrategy(new AdapterViewEmptyStrategy(lv_content));
     }
 
     public void onClickBtn(View view)
