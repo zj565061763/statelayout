@@ -163,6 +163,7 @@ public class FStateLayout extends FrameLayout
             mErrorView = simpleStateView;
 
             addView(simpleStateView);
+            hideView(simpleStateView);
 
             final String layoutName = getResources().getString(R.string.lib_statelayout_error_layout);
             final int layoutId = getLayoutId(getContext(), layoutName);
@@ -180,6 +181,7 @@ public class FStateLayout extends FrameLayout
             mEmptyView = simpleStateView;
 
             addView(simpleStateView);
+            hideView(simpleStateView);
 
             final String layoutName = getResources().getString(R.string.lib_statelayout_empty_layout);
             final int layoutId = getLayoutId(getContext(), layoutName);
@@ -230,10 +232,7 @@ public class FStateLayout extends FrameLayout
         }
 
         if (child instanceof IStateView)
-        {
             mStateViewHolder.add((IStateView) child);
-            hideView(child);
-        }
     }
 
     @Override
