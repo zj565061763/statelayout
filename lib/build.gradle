@@ -4,12 +4,12 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.zj565061763'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 20190605
-        versionName "1.1.1"
+        versionCode 20190723
+        versionName "1.1.2"
     }
     buildTypes {
         release {
@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compileOnly 'com.android.support:recyclerview-v7:27.1.1'
+    compileOnly 'androidx.recyclerview:recyclerview:1.0.0'
 }
 
 // 指定编码
