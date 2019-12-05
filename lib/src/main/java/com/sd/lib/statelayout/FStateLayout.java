@@ -1,6 +1,7 @@
 package com.sd.lib.statelayout;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -89,10 +90,16 @@ public class FStateLayout extends FrameLayout
         if (mEmptyStrategy != strategy)
         {
             mEmptyStrategy = strategy;
+
             if (strategy != null)
-                mContentListener.start();
-            else
+            {
+                if (isAttached(this))
+                    mContentListener.start();
+            } else
+            {
                 mContentListener.stop();
+            }
+
         }
     }
 
@@ -382,5 +389,16 @@ public class FStateLayout extends FrameLayout
         {
             return 0;
         }
+    }
+
+    private static boolean isAttached(View view)
+    {
+        if (view == null)
+            return false;
+
+        if (Build.VERSION.SDK_INT >= 19)
+            return view.isAttachedToWindow();
+        else
+            return view.getWindowToken() != null;
     }
 }
