@@ -9,15 +9,12 @@ public class CombineEmptyStrategy implements FStateEmptyStrategy
 
     public CombineEmptyStrategy(FStateEmptyStrategy... strategies)
     {
-        if (strategies != null)
+        for (FStateEmptyStrategy item : strategies)
         {
-            for (FStateEmptyStrategy item : strategies)
-            {
-                if (item == null)
-                    throw new IllegalArgumentException("strategies item is null");
+            if (item == null)
+                throw new IllegalArgumentException("strategies item is null");
 
-                mList.add(item);
-            }
+            mList.add(item);
         }
     }
 
