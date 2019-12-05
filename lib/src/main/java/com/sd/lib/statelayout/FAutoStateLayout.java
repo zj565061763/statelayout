@@ -39,18 +39,15 @@ public class FAutoStateLayout extends FStateLayout
     {
         super.onContentViewChanged(oldView, newView);
         autoEmptyStrategy(newView);
-
-        if (newView == null)
-        {
-            if (getEmptyStrategy() instanceof AutoEmptyStrategy)
-                setEmptyStrategy(null);
-        }
     }
 
     private void autoEmptyStrategy(View view)
     {
         if (view == null)
+        {
+            cancelAutoEmptyStrategy();
             return;
+        }
 
         final List<FStateEmptyStrategy> listStrategy = new LinkedList<>();
 
@@ -78,6 +75,12 @@ public class FAutoStateLayout extends FStateLayout
             final FStateEmptyStrategy[] array = new FStateEmptyStrategy[count];
             setEmptyStrategy(new AutoEmptyStrategy(new CombineEmptyStrategy(listStrategy.toArray(array))));
         }
+    }
+
+    private void cancelAutoEmptyStrategy()
+    {
+        if (getEmptyStrategy() instanceof AutoEmptyStrategy)
+            setEmptyStrategy(null);
     }
 
     private static class AutoEmptyStrategy implements FStateEmptyStrategy
