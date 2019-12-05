@@ -38,10 +38,18 @@ public class FAutoStateLayout extends FStateLayout
     protected void onContentViewChanged(View oldView, View newView)
     {
         super.onContentViewChanged(oldView, newView);
-        autoEmptyStrategy(newView);
+        autoEmptyStrategyInternal(newView);
     }
 
-    private void autoEmptyStrategy(View view)
+    /**
+     * 触发自动空布局策略
+     */
+    public void autoEmptyStrategy()
+    {
+        autoEmptyStrategyInternal(getContentView());
+    }
+
+    private void autoEmptyStrategyInternal(View view)
     {
         if (view == null)
         {
@@ -65,7 +73,10 @@ public class FAutoStateLayout extends FStateLayout
 
         final int count = listStrategy.size();
         if (count <= 0)
+        {
+            cancelAutoEmptyStrategy();
             return;
+        }
 
         if (count == 1)
         {

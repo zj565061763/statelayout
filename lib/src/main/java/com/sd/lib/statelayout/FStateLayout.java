@@ -192,7 +192,7 @@ public class FStateLayout extends FrameLayout
         }
     }
 
-    private View getContentView()
+    public View getContentView()
     {
         return mContentListener.getView();
     }
