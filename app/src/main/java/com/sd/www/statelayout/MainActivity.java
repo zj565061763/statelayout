@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
         lv_content = findViewById(R.id.lv_content);
         lv_content.setAdapter(mAdapter);
 
-        // 设置自动空布局策略
+        // 设置自动空布局策略，监听ListView或者RecyclerView的内容自动展示空布局
         view_state.autoEmpty();
     }
 
