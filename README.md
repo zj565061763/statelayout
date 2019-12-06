@@ -1,6 +1,39 @@
 # Gradle
 [![](https://jitpack.io/v/zj565061763/statelayout.svg)](https://jitpack.io/#zj565061763/statelayout)
 
+# Example
+```xml
+<com.sd.lib.statelayout.FAutoEmptyStateLayout
+    android:id="@+id/view_state"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/lv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</com.sd.lib.statelayout.FAutoEmptyStateLayout>
+```
+
+```java
+public class MainActivity extends AppCompatActivity
+{
+    private FAutoEmptyStateLayout view_state;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        view_state = findViewById(R.id.view_state);
+
+        // 设置自动空布局策略，监听ListView或者RecyclerView的内容自动展示空布局
+        view_state.autoEmpty();
+    }
+}
+```
+
 # 配置全局参数
 ```xml
 <resources>
