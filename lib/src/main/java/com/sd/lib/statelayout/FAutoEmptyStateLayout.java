@@ -40,7 +40,7 @@ public class FAutoEmptyStateLayout extends FStateLayout
     private boolean mAutoEmpty = false;
 
     /**
-     * 触发自动空布局策略
+     * 设置自动空布局策略
      */
     public void autoEmpty()
     {
