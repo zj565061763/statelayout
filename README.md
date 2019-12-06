@@ -31,6 +31,13 @@ public class MainActivity extends AppCompatActivity
         // 设置自动空布局策略，监听ListView或者RecyclerView的内容自动展示空布局
         view_state.autoEmpty();
     }
+
+    private void setEmptyStrategy()
+    {
+        ListView listView = findViewById(R.id.lv_content);
+        // 如果自动策略不满足需求，可以手动设置空布局策略，也可以自定义空布局策略
+        view_state.setEmptyStrategy(new AdapterViewEmptyStrategy(listView));
+    }
 }
 ```
 
