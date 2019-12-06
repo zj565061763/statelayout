@@ -10,7 +10,7 @@
         android:onClick="onClickBtn"
         android:text="Hello World!" />
 
-    <com.sd.lib.statelayout.FAutoStateLayout
+    <com.sd.lib.statelayout.FAutoEmptyStateLayout
         android:id="@+id/view_state"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -20,6 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </com.sd.lib.statelayout.FAutoStateLayout>
+    </com.sd.lib.statelayout.FAutoEmptyStateLayout>
 
 </LinearLayout>

@@ -9,12 +9,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.sd.lib.adapter.FSimpleAdapter;
+import com.sd.lib.statelayout.FAutoEmptyStateLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
+    private FAutoEmptyStateLayout view_state;
     private ListView lv_content;
     private final List<String> mListModel = new ArrayList<>();
 
@@ -23,8 +25,12 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        view_state = findViewById(R.id.view_state);
         lv_content = findViewById(R.id.lv_content);
         lv_content.setAdapter(mAdapter);
+
+        // 设置自动空布局策略
+        view_state.autoEmpty();
     }
 
     public void onClickBtn(View view)
