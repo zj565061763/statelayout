@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 用{@link FAutoEmptyStateLayout}替代
+ */
+@Deprecated
 public class FAutoStateLayout extends FStateLayout
 {
     public FAutoStateLayout(Context context)
