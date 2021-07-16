@@ -1,4 +1,4 @@
-package com.sd.www.statelayout;
+package com.sd.demo.statelayout;
 
 import android.os.Bundle;
 import android.view.View;

@@ -5,7 +5,7 @@ plugins {
 android {
     compileSdkVersion 30
     defaultConfig {
-        applicationId "com.sd.www.statelayout"
+        applicationId "com.sd.demo.statelayout"
         minSdkVersion 15
         targetSdkVersion 30
         versionCode 1
