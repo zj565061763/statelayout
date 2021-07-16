@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sd.lib.statelayout.empty.AdapterEmptyStrategy;
@@ -251,30 +253,13 @@ public class FStateLayout extends FrameLayout {
         mContentListener.stop();
     }
 
+    /**
+     * 监听内容View
+     */
     private final FViewListener<View> mContentListener = new FViewListener<View>() {
         @Override
-        protected void onUpdate(View view) {
-            if (mEmptyStrategy != null) {
-                if (mEmptyStrategy.isDestroyed()) {
-                    setEmptyStrategy(null);
-                    return;
-                }
-
-                final FStateEmptyStrategy.Result result = mEmptyStrategy.getResult();
-                if (result == null) {
-                    throw new RuntimeException("Strategy result is null");
-                }
-
-                if (result == FStateEmptyStrategy.Result.Empty) {
-                    if (getShowType() == ShowType.Content) {
-                        setShowType(ShowType.Empty);
-                    }
-                } else if (result == FStateEmptyStrategy.Result.Content) {
-                    setShowType(ShowType.Content);
-                }
-            } else {
-                mContentListener.stop();
-            }
+        protected void onUpdate(@NonNull View view) {
+            checkEmptyStrategy();
         }
 
         @Override
@@ -284,13 +269,43 @@ public class FStateLayout extends FrameLayout {
         }
     };
 
-    protected void onContentViewChanged(View oldView, View newView) {
+    private void checkEmptyStrategy() {
+        if (mEmptyStrategy == null) {
+            mContentListener.stop();
+            return;
+        }
+
+        if (mEmptyStrategy.isDestroyed()) {
+            setEmptyStrategy(null);
+            return;
+        }
+
+        final FStateEmptyStrategy.Result result = mEmptyStrategy.getResult();
+        switch (result) {
+            case Content:
+                setShowType(ShowType.Content);
+                break;
+            case Empty:
+                if (mShowType == ShowType.Content) {
+                    setShowType(ShowType.Empty);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 内容View变化
+     *
+     * @param oldView
+     * @param newView
+     */
+    protected void onContentViewChanged(@Nullable View oldView, @Nullable View newView) {
     }
 
     /**
      * 用{@link #setShowType(ShowType)} 替代
-     *
-     * @param dataCount
      */
     @Deprecated
     public void updateState(int dataCount) {
@@ -303,8 +318,6 @@ public class FStateLayout extends FrameLayout {
 
     /**
      * 用{@link #setEmptyStrategy(FStateEmptyStrategy)}替代
-     *
-     * @param adapter
      */
     @Deprecated
     public void setAdapter(BaseAdapter adapter) {
@@ -313,8 +326,6 @@ public class FStateLayout extends FrameLayout {
 
     /**
      * 用{@link #setEmptyStrategy(FStateEmptyStrategy)}替代
-     *
-     * @param adapter
      */
     @Deprecated
     public void setAdapter(RecyclerView.Adapter adapter) {
