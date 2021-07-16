@@ -1,11 +1,9 @@
 package com.sd.lib.statelayout.empty;
 
-public abstract class CountEmptyStrategy implements FStateEmptyStrategy
-{
+public abstract class CountEmptyStrategy implements FStateEmptyStrategy {
     private final int mEmptyCount;
 
-    public CountEmptyStrategy(int emptyCount)
-    {
+    public CountEmptyStrategy(int emptyCount) {
         if (emptyCount < 0)
             throw new IllegalArgumentException("emptyCount must >= 0");
 
@@ -13,23 +11,18 @@ public abstract class CountEmptyStrategy implements FStateEmptyStrategy
     }
 
     @Override
-    public boolean isDestroyed()
-    {
+    public boolean isDestroyed() {
         return false;
     }
 
     @Override
-    public final Result getResult()
-    {
+    public final Result getResult() {
         final int count = getCount();
-        if (count < 0)
-        {
+        if (count < 0) {
             return Result.None;
-        } else if (count <= mEmptyCount)
-        {
+        } else if (count <= mEmptyCount) {
             return Result.Empty;
-        } else
-        {
+        } else {
             return Result.Content;
         }
     }

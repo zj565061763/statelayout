@@ -2,8 +2,7 @@ package com.sd.lib.statelayout;
 
 import android.view.View;
 
-public interface IStateView
-{
+public interface IStateView {
     /**
      * 设置显示内容
      *

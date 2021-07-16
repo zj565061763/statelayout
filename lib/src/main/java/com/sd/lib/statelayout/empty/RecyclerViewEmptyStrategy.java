@@ -2,21 +2,17 @@ package com.sd.lib.statelayout.empty;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerViewEmptyStrategy extends SourceCountEmptyStrategy<RecyclerView>
-{
-    public RecyclerViewEmptyStrategy(RecyclerView source)
-    {
+public class RecyclerViewEmptyStrategy extends SourceCountEmptyStrategy<RecyclerView> {
+    public RecyclerViewEmptyStrategy(RecyclerView source) {
         super(source);
     }
 
-    public RecyclerViewEmptyStrategy(RecyclerView source, int emptyCount)
-    {
+    public RecyclerViewEmptyStrategy(RecyclerView source, int emptyCount) {
         super(source, emptyCount);
     }
 
     @Override
-    protected int getCount()
-    {
+    protected int getCount() {
         final RecyclerView.Adapter adapter = getSource().getAdapter();
         if (adapter == null)
             return -1;

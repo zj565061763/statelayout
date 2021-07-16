@@ -5,8 +5,7 @@ import android.view.ViewTreeObserver;
 
 import java.lang.ref.WeakReference;
 
-abstract class FViewListener<V extends View>
-{
+abstract class FViewListener<V extends View> {
     private WeakReference<V> mView;
 
     /**
@@ -14,8 +13,7 @@ abstract class FViewListener<V extends View>
      *
      * @return
      */
-    public final V getView()
-    {
+    public final V getView() {
         return mView == null ? null : mView.get();
     }
 
@@ -24,11 +22,9 @@ abstract class FViewListener<V extends View>
      *
      * @param view
      */
-    public final void setView(V view)
-    {
+    public final void setView(V view) {
         final V old = getView();
-        if (old != view)
-        {
+        if (old != view) {
             stop();
 
             mView = view == null ? null : new WeakReference<>(view);
@@ -41,8 +37,7 @@ abstract class FViewListener<V extends View>
     /**
      * 开始监听
      */
-    public final void start()
-    {
+    public final void start() {
         final View view = getView();
         if (view == null)
             return;
@@ -54,8 +49,7 @@ abstract class FViewListener<V extends View>
     /**
      * 停止监听
      */
-    public final void stop()
-    {
+    public final void stop() {
         final View view = getView();
         if (view == null)
             return;
@@ -64,58 +58,48 @@ abstract class FViewListener<V extends View>
         registerViewTreeObserver(view, false);
     }
 
-    private void registerAttachStateChangeListener(View view, boolean register)
-    {
+    private void registerAttachStateChangeListener(View view, boolean register) {
         view.removeOnAttachStateChangeListener(mOnAttachStateChangeListener);
         if (register)
             view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
     }
 
-    private void registerViewTreeObserver(View view, boolean register)
-    {
+    private void registerViewTreeObserver(View view, boolean register) {
         final ViewTreeObserver observer = view.getViewTreeObserver();
-        if (observer.isAlive())
-        {
+        if (observer.isAlive()) {
             observer.removeOnPreDrawListener(mOnPreDrawListener);
             if (register)
                 observer.addOnPreDrawListener(mOnPreDrawListener);
         }
     }
 
-    private final View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener()
-    {
+    private final View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener() {
         @Override
-        public void onViewAttachedToWindow(View v)
-        {
+        public void onViewAttachedToWindow(View v) {
             registerViewTreeObserver(v, true);
         }
 
         @Override
-        public void onViewDetachedFromWindow(View v)
-        {
+        public void onViewDetachedFromWindow(View v) {
             registerViewTreeObserver(v, false);
         }
     };
 
-    private final ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener()
-    {
+    private final ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
-        public boolean onPreDraw()
-        {
+        public boolean onPreDraw() {
             onUpdate(getView());
             return true;
         }
     };
 
-    protected void onViewChanged(V oldView, V newView)
-    {
+    protected void onViewChanged(V oldView, V newView) {
     }
 
     /**
      * 手动触发一次通知
      */
-    public void update()
-    {
+    public void update() {
     }
 
     protected abstract void onUpdate(V view);

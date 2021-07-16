@@ -17,28 +17,23 @@ import com.sd.lib.statelayout.empty.RecyclerAdapterEmptyStrategy;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FStateLayout extends FrameLayout
-{
-    public FStateLayout(Context context)
-    {
+public class FStateLayout extends FrameLayout {
+    public FStateLayout(Context context) {
         super(context);
         init(null);
     }
 
-    public FStateLayout(Context context, AttributeSet attrs)
-    {
+    public FStateLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public FStateLayout(Context context, AttributeSet attrs, int defStyleAttr)
-    {
+    public FStateLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
 
-    public enum ShowType
-    {
+    public enum ShowType {
         Empty,
         Error,
         Content,
@@ -55,8 +50,7 @@ public class FStateLayout extends FrameLayout
 
     private FStateEmptyStrategy mEmptyStrategy;
 
-    private void init(AttributeSet attrs)
-    {
+    private void init(AttributeSet attrs) {
 
     }
 
@@ -65,8 +59,7 @@ public class FStateLayout extends FrameLayout
      *
      * @return
      */
-    public ShowType getShowType()
-    {
+    public ShowType getShowType() {
         return mShowType;
     }
 
@@ -75,8 +68,7 @@ public class FStateLayout extends FrameLayout
      *
      * @return
      */
-    public FStateEmptyStrategy getEmptyStrategy()
-    {
+    public FStateEmptyStrategy getEmptyStrategy() {
         return mEmptyStrategy;
     }
 
@@ -85,18 +77,14 @@ public class FStateLayout extends FrameLayout
      *
      * @param strategy
      */
-    public void setEmptyStrategy(FStateEmptyStrategy strategy)
-    {
-        if (mEmptyStrategy != strategy)
-        {
+    public void setEmptyStrategy(FStateEmptyStrategy strategy) {
+        if (mEmptyStrategy != strategy) {
             mEmptyStrategy = strategy;
 
-            if (strategy != null)
-            {
+            if (strategy != null) {
                 if (isAttached(this))
                     mContentListener.start();
-            } else
-            {
+            } else {
                 mContentListener.stop();
             }
 
@@ -108,8 +96,7 @@ public class FStateLayout extends FrameLayout
      *
      * @param show
      */
-    public void setShowContentWhenState(boolean show)
-    {
+    public void setShowContentWhenState(boolean show) {
         mShowContentWhenState = show;
     }
 
@@ -120,8 +107,7 @@ public class FStateLayout extends FrameLayout
      *
      * @param top true-内容view在最顶层
      */
-    public void setContentTop(boolean top)
-    {
+    public void setContentTop(boolean top) {
         mContentTop = top;
     }
 
@@ -130,22 +116,18 @@ public class FStateLayout extends FrameLayout
      *
      * @param showType
      */
-    public void setShowType(ShowType showType)
-    {
+    public void setShowType(ShowType showType) {
         if (showType == null)
             throw new IllegalArgumentException("showType is null");
 
-        if (mShowType != showType)
-        {
+        if (mShowType != showType) {
             mShowType = showType;
             updateShowTypeInternal();
         }
     }
 
-    private void updateShowTypeInternal()
-    {
-        switch (mShowType)
-        {
+    private void updateShowTypeInternal() {
+        switch (mShowType) {
             case Content:
                 showView(getContentView());
                 hideStateView();
@@ -159,16 +141,13 @@ public class FStateLayout extends FrameLayout
         }
     }
 
-    private void hideStateView()
-    {
-        for (IStateView item : mStateViewHolder)
-        {
+    private void hideStateView() {
+        for (IStateView item : mStateViewHolder) {
             hideView((View) item);
         }
     }
 
-    private void showStateView(IStateView stateView)
-    {
+    private void showStateView(IStateView stateView) {
         showView((View) stateView);
 
         if (mShowContentWhenState)
@@ -176,31 +155,25 @@ public class FStateLayout extends FrameLayout
         else
             hideView(getContentView());
 
-        if (mContentTop)
-        {
+        if (mContentTop) {
             if (mShowContentWhenState)
                 bringChildToFront(getContentView());
-        } else
-        {
+        } else {
             bringChildToFront((View) stateView);
         }
 
-        for (IStateView item : mStateViewHolder)
-        {
+        for (IStateView item : mStateViewHolder) {
             if (item != stateView)
                 hideView((View) item);
         }
     }
 
-    public View getContentView()
-    {
+    public View getContentView() {
         return mContentListener.getView();
     }
 
-    public IStateView getErrorView()
-    {
-        if (mErrorView == null)
-        {
+    public IStateView getErrorView() {
+        if (mErrorView == null) {
             final SimpleStateView simpleStateView = new SimpleStateView(getContext());
             mErrorView = simpleStateView;
 
@@ -214,10 +187,8 @@ public class FStateLayout extends FrameLayout
         return mErrorView;
     }
 
-    public IStateView getEmptyView()
-    {
-        if (mEmptyView == null)
-        {
+    public IStateView getEmptyView() {
+        if (mEmptyView == null) {
             final SimpleStateView simpleStateView = new SimpleStateView(getContext());
             mEmptyView = simpleStateView;
 
@@ -236,30 +207,25 @@ public class FStateLayout extends FrameLayout
      *
      * @param view
      */
-    public void setContentView(View view)
-    {
+    public void setContentView(View view) {
         mContentListener.setView(view);
     }
 
     @Override
-    public void onViewAdded(View child)
-    {
+    public void onViewAdded(View child) {
         super.onViewAdded(child);
 
         final int count = getChildCount();
-        if (count == 1)
-        {
+        if (count == 1) {
             setContentView(getChildAt(0));
-        } else if (count > 1)
-        {
+        } else if (count > 1) {
             if (child != mEmptyView && child != mErrorView)
                 throw new RuntimeException("Illegal child: " + child);
         }
     }
 
     @Override
-    public void onViewRemoved(View child)
-    {
+    public void onViewRemoved(View child) {
         super.onViewRemoved(child);
 
         if (getContentView() == child)
@@ -270,28 +236,22 @@ public class FStateLayout extends FrameLayout
     }
 
     @Override
-    protected void onAttachedToWindow()
-    {
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         mContentListener.start();
     }
 
     @Override
-    protected void onDetachedFromWindow()
-    {
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mContentListener.stop();
     }
 
-    private final FViewListener<View> mContentListener = new FViewListener<View>()
-    {
+    private final FViewListener<View> mContentListener = new FViewListener<View>() {
         @Override
-        protected void onUpdate(View view)
-        {
-            if (mEmptyStrategy != null)
-            {
-                if (mEmptyStrategy.isDestroyed())
-                {
+        protected void onUpdate(View view) {
+            if (mEmptyStrategy != null) {
+                if (mEmptyStrategy.isDestroyed()) {
                     setEmptyStrategy(null);
                     return;
                 }
@@ -300,30 +260,25 @@ public class FStateLayout extends FrameLayout
                 if (result == null)
                     throw new RuntimeException("Strategy result is null");
 
-                if (result == FStateEmptyStrategy.Result.Empty)
-                {
+                if (result == FStateEmptyStrategy.Result.Empty) {
                     if (getShowType() == ShowType.Content)
                         setShowType(ShowType.Empty);
-                } else if (result == FStateEmptyStrategy.Result.Content)
-                {
+                } else if (result == FStateEmptyStrategy.Result.Content) {
                     setShowType(ShowType.Content);
                 }
-            } else
-            {
+            } else {
                 mContentListener.stop();
             }
         }
 
         @Override
-        protected void onViewChanged(View oldView, View newView)
-        {
+        protected void onViewChanged(View oldView, View newView) {
             super.onViewChanged(oldView, newView);
             onContentViewChanged(oldView, newView);
         }
     };
 
-    protected void onContentViewChanged(View oldView, View newView)
-    {
+    protected void onContentViewChanged(View oldView, View newView) {
     }
 
     /**
@@ -332,13 +287,10 @@ public class FStateLayout extends FrameLayout
      * @param dataCount
      */
     @Deprecated
-    public void updateState(int dataCount)
-    {
-        if (dataCount > 0)
-        {
+    public void updateState(int dataCount) {
+        if (dataCount > 0) {
             setShowType(ShowType.Content);
-        } else
-        {
+        } else {
             setShowType(ShowType.Empty);
         }
     }
@@ -349,8 +301,7 @@ public class FStateLayout extends FrameLayout
      * @param adapter
      */
     @Deprecated
-    public void setAdapter(BaseAdapter adapter)
-    {
+    public void setAdapter(BaseAdapter adapter) {
         setEmptyStrategy(new AdapterEmptyStrategy(adapter));
     }
 
@@ -360,39 +311,32 @@ public class FStateLayout extends FrameLayout
      * @param adapter
      */
     @Deprecated
-    public void setAdapter(RecyclerView.Adapter adapter)
-    {
+    public void setAdapter(RecyclerView.Adapter adapter) {
         setEmptyStrategy(new RecyclerAdapterEmptyStrategy(adapter));
     }
 
-    private static void hideView(View view)
-    {
+    private static void hideView(View view) {
         if (view != null && view.getVisibility() != GONE)
             view.setVisibility(GONE);
     }
 
-    private static void showView(View view)
-    {
+    private static void showView(View view) {
         if (view != null && view.getVisibility() != VISIBLE)
             view.setVisibility(VISIBLE);
     }
 
-    private static int getLayoutId(Context context, String name)
-    {
+    private static int getLayoutId(Context context, String name) {
         if (TextUtils.isEmpty(name))
             return 0;
 
-        try
-        {
+        try {
             return context.getResources().getIdentifier(name, "layout", context.getPackageName());
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return 0;
         }
     }
 
-    private static boolean isAttached(View view)
-    {
+    private static boolean isAttached(View view) {
         if (view == null)
             return false;
 

@@ -1,30 +1,24 @@
 package com.sd.lib.statelayout.empty;
 
-public abstract class SourceCountEmptyStrategy<S> extends SourceEmptyStrategy<S>
-{
+public abstract class SourceCountEmptyStrategy<S> extends SourceEmptyStrategy<S> {
     private final CountEmptyStrategy mCountEmptyStrategy;
 
-    public SourceCountEmptyStrategy(S source)
-    {
+    public SourceCountEmptyStrategy(S source) {
         this(source, 0);
     }
 
-    public SourceCountEmptyStrategy(S source, int emptyCount)
-    {
+    public SourceCountEmptyStrategy(S source, int emptyCount) {
         super(source);
-        mCountEmptyStrategy = new CountEmptyStrategy(emptyCount)
-        {
+        mCountEmptyStrategy = new CountEmptyStrategy(emptyCount) {
             @Override
-            protected int getCount()
-            {
+            protected int getCount() {
                 return SourceCountEmptyStrategy.this.getCount();
             }
         };
     }
 
     @Override
-    protected final Result getResultImpl(S source)
-    {
+    protected final Result getResultImpl(S source) {
         return mCountEmptyStrategy.getResult();
     }
 

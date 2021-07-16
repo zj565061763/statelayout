@@ -3,14 +3,11 @@ package com.sd.lib.statelayout.empty;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class CombineEmptyStrategy implements FStateEmptyStrategy
-{
+public class CombineEmptyStrategy implements FStateEmptyStrategy {
     private final List<FStateEmptyStrategy> mList = new CopyOnWriteArrayList<>();
 
-    public CombineEmptyStrategy(FStateEmptyStrategy... strategies)
-    {
-        for (FStateEmptyStrategy item : strategies)
-        {
+    public CombineEmptyStrategy(FStateEmptyStrategy... strategies) {
+        for (FStateEmptyStrategy item : strategies) {
             if (item == null)
                 throw new IllegalArgumentException("strategies item is null");
 
@@ -19,21 +16,16 @@ public class CombineEmptyStrategy implements FStateEmptyStrategy
     }
 
     @Override
-    public boolean isDestroyed()
-    {
+    public boolean isDestroyed() {
         return mList.isEmpty();
     }
 
     @Override
-    public Result getResult()
-    {
-        for (FStateEmptyStrategy item : mList)
-        {
-            if (item.isDestroyed())
-            {
+    public Result getResult() {
+        for (FStateEmptyStrategy item : mList) {
+            if (item.isDestroyed()) {
                 mList.remove(item);
-            } else
-            {
+            } else {
                 final Result itemResult = item.getResult();
                 if (itemResult == Result.Content)
                     return Result.Content;
