@@ -33,5 +33,5 @@ public abstract class SourceEmptyStrategy<S> implements FStateEmptyStrategy {
         return getResultImpl(source);
     }
 
-    protected abstract Result getResultImpl(S source);
+    protected abstract Result getResultImpl(@NonNull S source);
 }
