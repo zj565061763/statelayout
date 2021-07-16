@@ -117,13 +117,8 @@ public class FAutoEmptyStateLayout extends FStateLayout {
         }
     }
 
-    private static List<View> getAllViews(View view) {
-        if (view == null) {
-            throw new IllegalArgumentException("view is null when getAllViews()");
-        }
-
+    private static List<View> getAllViews(@NonNull View view) {
         final List<View> list = new ArrayList<>();
-
         list.add(view);
         if (view instanceof ViewGroup) {
             final ViewGroup viewGroup = (ViewGroup) view;
