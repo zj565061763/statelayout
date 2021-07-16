@@ -34,8 +34,11 @@ public class FStateLayout extends FrameLayout {
     }
 
     public enum ShowType {
+        /** 显示无内容 */
         Empty,
+        /** 显示错误 */
         Error,
+        /** 显示内容 */
         Content,
     }
 
