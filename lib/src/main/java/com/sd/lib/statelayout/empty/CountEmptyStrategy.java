@@ -1,11 +1,14 @@
 package com.sd.lib.statelayout.empty;
 
+import androidx.annotation.NonNull;
+
 public abstract class CountEmptyStrategy implements FStateEmptyStrategy {
     private final int mEmptyCount;
 
     public CountEmptyStrategy(int emptyCount) {
-        if (emptyCount < 0)
+        if (emptyCount < 0) {
             throw new IllegalArgumentException("emptyCount must >= 0");
+        }
 
         mEmptyCount = emptyCount;
     }
@@ -15,6 +18,7 @@ public abstract class CountEmptyStrategy implements FStateEmptyStrategy {
         return false;
     }
 
+    @NonNull
     @Override
     public final Result getResult() {
         final int count = getCount();
