@@ -2,7 +2,6 @@ package com.sd.lib.statelayout;
 
 import android.view.View;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 
 public interface IStateView {
@@ -11,7 +10,7 @@ public interface IStateView {
      *
      * @param layoutId 内容view布局id
      */
-    void setContentView( int layoutId);
+    void setContentView(int layoutId);
 
     /**
      * 设置显示内容
