@@ -3,6 +3,9 @@ package com.sd.lib.statelayout;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.lang.ref.WeakReference;
 
 abstract class FViewListener<V extends View> {
@@ -18,7 +21,7 @@ abstract class FViewListener<V extends View> {
     /**
      * 设置要监听的view
      */
-    public final void setView(V view) {
+    public final void setView(@Nullable V view) {
         final V old = getView();
         if (old != view) {
             stop();
@@ -56,6 +59,13 @@ abstract class FViewListener<V extends View> {
         registerViewTreeObserver(view, false);
     }
 
+    /**
+     * 手动触发一次通知
+     */
+    public final void update() {
+        notifyUpdate();
+    }
+
     private void registerAttachStateChangeListener(View view, boolean register) {
         view.removeOnAttachStateChangeListener(mOnAttachStateChangeListener);
         if (register) {
@@ -88,19 +98,26 @@ abstract class FViewListener<V extends View> {
     private final ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
-            onUpdate(getView());
+            notifyUpdate();
             return true;
         }
     };
 
-    protected void onViewChanged(V oldView, V newView) {
+    private void notifyUpdate() {
+        final V view = getView();
+        if (view != null) {
+            onUpdate(view);
+        }
     }
 
     /**
-     * 手动触发一次通知
+     * View变化回调
+     *
+     * @param oldView 旧的View
+     * @param newView 新的View
      */
-    public void update() {
+    protected void onViewChanged(@Nullable V oldView, @Nullable V newView) {
     }
 
-    protected abstract void onUpdate(V view);
+    protected abstract void onUpdate(@NonNull V view);
 }
