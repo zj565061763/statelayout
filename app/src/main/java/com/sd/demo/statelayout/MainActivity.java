@@ -11,13 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.sd.lib.adapter.FSimpleAdapter;
 import com.sd.lib.statelayout.FAutoEmptyStateLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
     private FAutoEmptyStateLayout view_state;
     private ListView lv_content;
-    private final List<String> mListModel = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +28,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickBtn(View view) {
-        if (mListModel.isEmpty()) {
+        if (mAdapter.getDataHolder().size() == 0) {
             for (int i = 0; i < 10; i++) {
-                mListModel.add(String.valueOf(i));
+                mAdapter.getDataHolder().add(String.valueOf(i));
             }
         } else {
-            mListModel.clear();
+            mAdapter.getDataHolder().setData(null);
         }
-        mAdapter.getDataHolder().setData(mListModel);
     }
 
     private final FSimpleAdapter<String> mAdapter = new FSimpleAdapter<String>() {
