@@ -217,7 +217,6 @@ public class FStateLayout extends FrameLayout {
     @Override
     public void onViewAdded(View child) {
         super.onViewAdded(child);
-
         final int count = getChildCount();
         if (count == 1) {
             setContentView(getChildAt(0));
@@ -231,7 +230,6 @@ public class FStateLayout extends FrameLayout {
     @Override
     public void onViewRemoved(View child) {
         super.onViewRemoved(child);
-
         if (getContentView() == child) {
             setContentView(null);
         }
