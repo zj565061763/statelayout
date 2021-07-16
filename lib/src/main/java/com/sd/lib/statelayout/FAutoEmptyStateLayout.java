@@ -42,7 +42,7 @@ public class FAutoEmptyStateLayout extends FStateLayout {
      */
     public void autoEmpty() {
         mAutoEmpty = true;
-        applyAutoEmptyStrategy(getContentView());
+        applyEmptyStrategy(getContentView());
     }
 
     @Override
@@ -54,12 +54,12 @@ public class FAutoEmptyStateLayout extends FStateLayout {
     @Override
     protected void onContentViewChanged(@Nullable View oldView, @Nullable View newView) {
         super.onContentViewChanged(oldView, newView);
-        applyAutoEmptyStrategy(newView);
+        applyEmptyStrategy(newView);
     }
 
-    private void applyAutoEmptyStrategy(@Nullable View view) {
+    private void applyEmptyStrategy(@Nullable View view) {
         if (view == null) {
-            cancelAutoEmptyStrategy();
+            cancelInternalEmptyStrategy();
             return;
         }
 
@@ -80,7 +80,7 @@ public class FAutoEmptyStateLayout extends FStateLayout {
 
         final int count = listStrategy.size();
         if (count <= 0) {
-            cancelAutoEmptyStrategy();
+            cancelInternalEmptyStrategy();
             return;
         }
 
@@ -92,7 +92,7 @@ public class FAutoEmptyStateLayout extends FStateLayout {
         }
     }
 
-    private void cancelAutoEmptyStrategy() {
+    private void cancelInternalEmptyStrategy() {
         if (getEmptyStrategy() instanceof InternalEmptyStrategy) {
             super.setEmptyStrategy(null);
         }
