@@ -5,16 +5,20 @@ import androidx.annotation.NonNull;
 public abstract class SourceCountEmptyStrategy<S> extends SourceEmptyStrategy<S> {
     private final CountEmptyStrategy mCountEmptyStrategy;
 
-    public SourceCountEmptyStrategy(S source) {
+    public SourceCountEmptyStrategy(@NonNull S source) {
         this(source, 0);
     }
 
-    public SourceCountEmptyStrategy(S source, int emptyCount) {
+    public SourceCountEmptyStrategy(@NonNull S source, int emptyCount) {
         super(source);
         mCountEmptyStrategy = new CountEmptyStrategy(emptyCount) {
             @Override
             protected int getCount() {
-                return SourceCountEmptyStrategy.this.getCount();
+                final S src = getSource();
+                if (src == null) {
+                    return -1;
+                }
+                return SourceCountEmptyStrategy.this.getCount(src);
             }
         };
     }
@@ -25,5 +29,5 @@ public abstract class SourceCountEmptyStrategy<S> extends SourceEmptyStrategy<S>
         return mCountEmptyStrategy.getResult();
     }
 
-    protected abstract int getCount();
+    protected abstract int getCount(@NonNull S source);
 }

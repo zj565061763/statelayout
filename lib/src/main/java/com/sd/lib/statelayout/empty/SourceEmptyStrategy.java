@@ -8,13 +8,13 @@ import java.lang.ref.WeakReference;
 public abstract class SourceEmptyStrategy<S> implements FStateEmptyStrategy {
     private final WeakReference<S> mSource;
 
-    public SourceEmptyStrategy(@Nullable S source) {
-        mSource = source == null ? null : new WeakReference<>(source);
+    public SourceEmptyStrategy(@NonNull S source) {
+        mSource = new WeakReference<>(source);
     }
 
     @Nullable
     public final S getSource() {
-        return mSource == null ? null : mSource.get();
+        return mSource.get();
     }
 
     @Override
