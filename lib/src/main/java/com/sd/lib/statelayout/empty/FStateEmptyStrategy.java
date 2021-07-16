@@ -12,8 +12,11 @@ public interface FStateEmptyStrategy {
     Result getResult();
 
     enum Result {
+        /** 显示无内容 */
         Empty,
+        /** 显示内容 */
         Content,
+        /** 未知 */
         None,
     }
 }
