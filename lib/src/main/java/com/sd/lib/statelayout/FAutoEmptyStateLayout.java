@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -84,26 +85,23 @@ public class FAutoEmptyStateLayout extends FStateLayout {
         }
 
         if (count == 1) {
-            super.setEmptyStrategy(new AutoEmptyStrategy(listStrategy.get(0)));
+            super.setEmptyStrategy(new InternalEmptyStrategy(listStrategy.get(0)));
         } else {
             final FStateEmptyStrategy[] array = new FStateEmptyStrategy[count];
-            super.setEmptyStrategy(new AutoEmptyStrategy(new CombineEmptyStrategy(listStrategy.toArray(array))));
+            super.setEmptyStrategy(new InternalEmptyStrategy(new CombineEmptyStrategy(listStrategy.toArray(array))));
         }
     }
 
     private void cancelAutoEmptyStrategy() {
-        if (getEmptyStrategy() instanceof AutoEmptyStrategy) {
+        if (getEmptyStrategy() instanceof InternalEmptyStrategy) {
             super.setEmptyStrategy(null);
         }
     }
 
-    private static class AutoEmptyStrategy implements FStateEmptyStrategy {
+    private static class InternalEmptyStrategy implements FStateEmptyStrategy {
         private final FStateEmptyStrategy mStrategy;
 
-        public AutoEmptyStrategy(FStateEmptyStrategy strategy) {
-            if (strategy == null) {
-                throw new IllegalArgumentException("strategy is null when create " + AutoEmptyStrategy.class.getSimpleName());
-            }
+        public InternalEmptyStrategy(@NonNull FStateEmptyStrategy strategy) {
             mStrategy = strategy;
         }
 
@@ -112,6 +110,7 @@ public class FAutoEmptyStateLayout extends FStateLayout {
             return mStrategy.isDestroyed();
         }
 
+        @NonNull
         @Override
         public Result getResult() {
             return mStrategy.getResult();
