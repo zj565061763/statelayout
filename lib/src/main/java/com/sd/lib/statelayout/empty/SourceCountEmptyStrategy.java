@@ -1,5 +1,7 @@
 package com.sd.lib.statelayout.empty;
 
+import androidx.annotation.NonNull;
+
 public abstract class SourceCountEmptyStrategy<S> extends SourceEmptyStrategy<S> {
     private final CountEmptyStrategy mCountEmptyStrategy;
 
@@ -17,8 +19,9 @@ public abstract class SourceCountEmptyStrategy<S> extends SourceEmptyStrategy<S>
         };
     }
 
+    @NonNull
     @Override
-    protected final Result getResultImpl(S source) {
+    protected final Result getResultImpl(@NonNull S source) {
         return mCountEmptyStrategy.getResult();
     }
 
