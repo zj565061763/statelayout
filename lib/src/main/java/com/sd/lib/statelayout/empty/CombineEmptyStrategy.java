@@ -2,32 +2,32 @@ package com.sd.lib.statelayout.empty;
 
 import androidx.annotation.NonNull;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CombineEmptyStrategy implements FStateEmptyStrategy {
-    private final List<FStateEmptyStrategy> mList = new CopyOnWriteArrayList<>();
+    private final Map<FStateEmptyStrategy, String> mHolder = new ConcurrentHashMap<>();
 
     public CombineEmptyStrategy(@NonNull FStateEmptyStrategy... strategies) {
         for (FStateEmptyStrategy item : strategies) {
             if (item == null) {
                 throw new IllegalArgumentException("strategies item is null");
             }
-            mList.add(item);
+            mHolder.put(item, "");
         }
     }
 
     @Override
     public boolean isDestroyed() {
-        return mList.isEmpty();
+        return mHolder.isEmpty();
     }
 
     @NonNull
     @Override
     public Result getResult() {
-        for (FStateEmptyStrategy item : mList) {
+        for (FStateEmptyStrategy item : mHolder.keySet()) {
             if (item.isDestroyed()) {
-                mList.remove(item);
+                mHolder.remove(item);
             } else {
                 final Result itemResult = item.getResult();
                 if (itemResult == Result.Content) {
@@ -38,7 +38,7 @@ public class CombineEmptyStrategy implements FStateEmptyStrategy {
             }
         }
 
-        if (mList.isEmpty()) {
+        if (mHolder.isEmpty()) {
             return Result.None;
         }
 
