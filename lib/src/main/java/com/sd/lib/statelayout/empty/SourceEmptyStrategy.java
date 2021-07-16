@@ -29,7 +29,6 @@ public abstract class SourceEmptyStrategy<S> implements FStateEmptyStrategy {
         if (source == null) {
             return Result.None;
         }
-
         return getResultImpl(source);
     }
 

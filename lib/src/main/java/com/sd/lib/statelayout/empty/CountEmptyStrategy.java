@@ -9,7 +9,6 @@ public abstract class CountEmptyStrategy implements FStateEmptyStrategy {
         if (emptyCount < 0) {
             throw new IllegalArgumentException("emptyCount must >= 0");
         }
-
         mEmptyCount = emptyCount;
     }
 
