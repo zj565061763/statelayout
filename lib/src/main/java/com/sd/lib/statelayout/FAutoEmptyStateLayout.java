@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sd.lib.statelayout.empty.AdapterViewEmptyStrategy;
@@ -44,23 +45,24 @@ public class FAutoEmptyStateLayout extends FStateLayout {
     }
 
     @Override
-    public void setEmptyStrategy(FStateEmptyStrategy strategy) {
+    public void setEmptyStrategy(@Nullable FStateEmptyStrategy strategy) {
         mAutoEmpty = false;
         super.setEmptyStrategy(strategy);
     }
 
     @Override
-    protected void onContentViewChanged(View oldView, View newView) {
+    protected void onContentViewChanged(@Nullable View oldView, @Nullable View newView) {
         super.onContentViewChanged(oldView, newView);
         applyAutoEmptyStrategy(newView);
     }
 
-    private void applyAutoEmptyStrategy(View view) {
-        if (!mAutoEmpty)
-            return;
-
+    private void applyAutoEmptyStrategy(@Nullable View view) {
         if (view == null) {
             cancelAutoEmptyStrategy();
+            return;
+        }
+
+        if (!mAutoEmpty) {
             return;
         }
 
@@ -90,16 +92,18 @@ public class FAutoEmptyStateLayout extends FStateLayout {
     }
 
     private void cancelAutoEmptyStrategy() {
-        if (getEmptyStrategy() instanceof AutoEmptyStrategy)
+        if (getEmptyStrategy() instanceof AutoEmptyStrategy) {
             super.setEmptyStrategy(null);
+        }
     }
 
     private static class AutoEmptyStrategy implements FStateEmptyStrategy {
         private final FStateEmptyStrategy mStrategy;
 
         public AutoEmptyStrategy(FStateEmptyStrategy strategy) {
-            if (strategy == null)
+            if (strategy == null) {
                 throw new IllegalArgumentException("strategy is null when create " + AutoEmptyStrategy.class.getSimpleName());
+            }
             mStrategy = strategy;
         }
 
@@ -115,8 +119,9 @@ public class FAutoEmptyStateLayout extends FStateLayout {
     }
 
     private static List<View> getAllViews(View view) {
-        if (view == null)
+        if (view == null) {
             throw new IllegalArgumentException("view is null when getAllViews()");
+        }
 
         final List<View> list = new ArrayList<>();
 
@@ -126,8 +131,9 @@ public class FAutoEmptyStateLayout extends FStateLayout {
             final int count = viewGroup.getChildCount();
             for (int i = 0; i < count; i++) {
                 final View child = viewGroup.getChildAt(i);
-                if (child != null)
+                if (child != null) {
                     list.addAll(getAllViews(child));
+                }
             }
         }
         return list;
