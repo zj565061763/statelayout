@@ -68,6 +68,7 @@ public class FStateLayout extends FrameLayout {
     /**
      * 返回当前显示的类型
      */
+    @NonNull
     public ShowType getShowType() {
         return mShowType;
     }
@@ -75,6 +76,7 @@ public class FStateLayout extends FrameLayout {
     /**
      * {@link FStateEmptyStrategy}
      */
+    @Nullable
     public FStateEmptyStrategy getEmptyStrategy() {
         return mEmptyStrategy;
     }
@@ -82,7 +84,7 @@ public class FStateLayout extends FrameLayout {
     /**
      * {@link FStateEmptyStrategy}
      */
-    public void setEmptyStrategy(FStateEmptyStrategy strategy) {
+    public void setEmptyStrategy(@Nullable FStateEmptyStrategy strategy) {
         if (mEmptyStrategy == strategy) {
             return;
         }
@@ -119,11 +121,7 @@ public class FStateLayout extends FrameLayout {
     /**
      * 设置显示类型
      */
-    public void setShowType(ShowType showType) {
-        if (showType == null) {
-            throw new IllegalArgumentException("showType is null");
-        }
-
+    public void setShowType(@NonNull ShowType showType) {
         if (mShowType != showType) {
             mShowType = showType;
             updateShowTypeInternal();
@@ -151,7 +149,7 @@ public class FStateLayout extends FrameLayout {
         }
     }
 
-    private void showStateView(IStateView stateView) {
+    private void showStateView(@NonNull IStateView stateView) {
         showView((View) stateView);
 
         if (mShowContentWhenState) {
@@ -175,10 +173,12 @@ public class FStateLayout extends FrameLayout {
         }
     }
 
+    @Nullable
     public View getContentView() {
         return mContentListener.getView();
     }
 
+    @NonNull
     public IStateView getErrorView() {
         if (mErrorView == null) {
             final SimpleStateView simpleStateView = new SimpleStateView(getContext());
@@ -194,6 +194,7 @@ public class FStateLayout extends FrameLayout {
         return mErrorView;
     }
 
+    @NonNull
     public IStateView getEmptyView() {
         if (mEmptyView == null) {
             final SimpleStateView simpleStateView = new SimpleStateView(getContext());
@@ -212,7 +213,7 @@ public class FStateLayout extends FrameLayout {
     /**
      * 设置内容View
      */
-    public void setContentView(View view) {
+    public void setContentView(@Nullable View view) {
         mContentListener.setView(view);
     }
 
