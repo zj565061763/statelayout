@@ -81,17 +81,18 @@ public class FStateLayout extends FrameLayout {
      * {@link FStateEmptyStrategy}
      */
     public void setEmptyStrategy(FStateEmptyStrategy strategy) {
-        if (mEmptyStrategy != strategy) {
-            mEmptyStrategy = strategy;
+        if (mEmptyStrategy == strategy) {
+            return;
+        }
 
-            if (strategy != null) {
-                if (isAttached(this)) {
-                    mContentListener.start();
-                }
-            } else {
-                mContentListener.stop();
+        mEmptyStrategy = strategy;
+
+        if (strategy != null) {
+            if (isAttached(this)) {
+                mContentListener.start();
             }
-
+        } else {
+            mContentListener.stop();
         }
     }
 
@@ -323,13 +324,13 @@ public class FStateLayout extends FrameLayout {
     }
 
     private static void hideView(View view) {
-        if (view != null && view.getVisibility() != GONE) {
+        if (view != null) {
             view.setVisibility(GONE);
         }
     }
 
     private static void showView(View view) {
-        if (view != null && view.getVisibility() != VISIBLE) {
+        if (view != null) {
             view.setVisibility(VISIBLE);
         }
     }
