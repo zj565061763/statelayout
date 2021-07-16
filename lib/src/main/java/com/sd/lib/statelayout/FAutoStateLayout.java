@@ -79,16 +79,18 @@ public class FAutoStateLayout extends FStateLayout {
     }
 
     private void cancelAutoEmptyStrategy() {
-        if (getEmptyStrategy() instanceof AutoEmptyStrategy)
+        if (getEmptyStrategy() instanceof AutoEmptyStrategy) {
             setEmptyStrategy(null);
+        }
     }
 
     private static class AutoEmptyStrategy implements FStateEmptyStrategy {
         private final FStateEmptyStrategy mStrategy;
 
         public AutoEmptyStrategy(FStateEmptyStrategy strategy) {
-            if (strategy == null)
+            if (strategy == null) {
                 throw new IllegalArgumentException("strategy is null when create " + AutoEmptyStrategy.class.getSimpleName());
+            }
             mStrategy = strategy;
         }
 
@@ -104,8 +106,9 @@ public class FAutoStateLayout extends FStateLayout {
     }
 
     private static List<View> getAllViews(View view) {
-        if (view == null)
+        if (view == null) {
             throw new IllegalArgumentException("view is null when getAllViews()");
+        }
 
         final List<View> list = new ArrayList<>();
 
@@ -115,8 +118,9 @@ public class FAutoStateLayout extends FStateLayout {
             final int count = viewGroup.getChildCount();
             for (int i = 0; i < count; i++) {
                 final View child = viewGroup.getChildAt(i);
-                if (child != null)
+                if (child != null) {
                     list.addAll(getAllViews(child));
+                }
             }
         }
         return list;
