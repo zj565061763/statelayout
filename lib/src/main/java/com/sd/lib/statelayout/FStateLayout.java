@@ -42,15 +42,21 @@ public class FStateLayout extends FrameLayout {
         Content,
     }
 
+    /** 当前显示类型 */
     private ShowType mShowType = ShowType.Content;
 
-    private IStateView mEmptyView;
-    private IStateView mErrorView;
     private final Set<IStateView> mStateViewHolder = new HashSet<>();
+    /** 无内容状态View */
+    private IStateView mEmptyView;
+    /** 错误状态View */
+    private IStateView mErrorView;
 
+    /** 显示状态View的时候是否也显示内容View */
     private boolean mShowContentWhenState = true;
+    /** 显示状态View的时候是否也显示内容View */
     private boolean mContentTop = true;
 
+    /** 无内容状态策略接口 */
     private FStateEmptyStrategy mEmptyStrategy;
 
     private void init(AttributeSet attrs) {
@@ -59,8 +65,6 @@ public class FStateLayout extends FrameLayout {
 
     /**
      * 返回当前显示的类型
-     *
-     * @return
      */
     public ShowType getShowType() {
         return mShowType;
@@ -68,8 +72,6 @@ public class FStateLayout extends FrameLayout {
 
     /**
      * {@link FStateEmptyStrategy}
-     *
-     * @return
      */
     public FStateEmptyStrategy getEmptyStrategy() {
         return mEmptyStrategy;
@@ -77,8 +79,6 @@ public class FStateLayout extends FrameLayout {
 
     /**
      * {@link FStateEmptyStrategy}
-     *
-     * @param strategy
      */
     public void setEmptyStrategy(FStateEmptyStrategy strategy) {
         if (mEmptyStrategy != strategy) {
@@ -96,8 +96,6 @@ public class FStateLayout extends FrameLayout {
 
     /**
      * 设置显示状态view的时候是否也显示内容view，默认true-显示
-     *
-     * @param show
      */
     public void setShowContentWhenState(boolean show) {
         mShowContentWhenState = show;
@@ -106,7 +104,7 @@ public class FStateLayout extends FrameLayout {
     /**
      * 设置内容view是否在最顶层，默认true
      * <p>
-     * 内容view是当前FStateLayout的child才有效
+     * 内容view是当前容器的child才有效
      *
      * @param top true-内容view在最顶层
      */
@@ -116,12 +114,11 @@ public class FStateLayout extends FrameLayout {
 
     /**
      * 设置显示类型
-     *
-     * @param showType
      */
     public void setShowType(ShowType showType) {
-        if (showType == null)
+        if (showType == null) {
             throw new IllegalArgumentException("showType is null");
+        }
 
         if (mShowType != showType) {
             mShowType = showType;
@@ -207,8 +204,6 @@ public class FStateLayout extends FrameLayout {
 
     /**
      * 设置内容View
-     *
-     * @param view
      */
     public void setContentView(View view) {
         mContentListener.setView(view);
