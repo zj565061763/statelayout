@@ -35,8 +35,9 @@ abstract class FViewListener<V extends View> {
      */
     public final void start() {
         final View view = getView();
-        if (view == null)
+        if (view == null) {
             return;
+        }
 
         registerAttachStateChangeListener(view, true);
         registerViewTreeObserver(view, true);
@@ -57,16 +58,18 @@ abstract class FViewListener<V extends View> {
 
     private void registerAttachStateChangeListener(View view, boolean register) {
         view.removeOnAttachStateChangeListener(mOnAttachStateChangeListener);
-        if (register)
+        if (register) {
             view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
+        }
     }
 
     private void registerViewTreeObserver(View view, boolean register) {
         final ViewTreeObserver observer = view.getViewTreeObserver();
         if (observer.isAlive()) {
             observer.removeOnPreDrawListener(mOnPreDrawListener);
-            if (register)
+            if (register) {
                 observer.addOnPreDrawListener(mOnPreDrawListener);
+            }
         }
     }
 
