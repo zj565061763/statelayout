@@ -10,8 +10,6 @@ abstract class FViewListener<V extends View> {
 
     /**
      * 返回设置的view
-     *
-     * @return
      */
     public final V getView() {
         return mView == null ? null : mView.get();
@@ -19,8 +17,6 @@ abstract class FViewListener<V extends View> {
 
     /**
      * 设置要监听的view
-     *
-     * @param view
      */
     public final void setView(V view) {
         final V old = getView();
@@ -51,8 +47,9 @@ abstract class FViewListener<V extends View> {
      */
     public final void stop() {
         final View view = getView();
-        if (view == null)
+        if (view == null) {
             return;
+        }
 
         registerAttachStateChangeListener(view, false);
         registerViewTreeObserver(view, false);
