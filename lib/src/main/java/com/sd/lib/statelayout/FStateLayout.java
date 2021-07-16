@@ -53,7 +53,7 @@ public class FStateLayout extends FrameLayout {
 
     /** 显示状态View的时候是否也显示内容View */
     private boolean mShowContentWhenState = true;
-    /** 显示状态View的时候是否也显示内容View */
+    /** 内容View是否在最顶层 */
     private boolean mContentTop = true;
 
     /** 无内容状态策略接口 */
@@ -85,8 +85,9 @@ public class FStateLayout extends FrameLayout {
             mEmptyStrategy = strategy;
 
             if (strategy != null) {
-                if (isAttached(this))
+                if (isAttached(this)) {
                     mContentListener.start();
+                }
             } else {
                 mContentListener.stop();
             }
@@ -95,18 +96,18 @@ public class FStateLayout extends FrameLayout {
     }
 
     /**
-     * 设置显示状态view的时候是否也显示内容view，默认true-显示
+     * 设置显示状态View的时候是否也显示内容View，默认true
      */
     public void setShowContentWhenState(boolean show) {
         mShowContentWhenState = show;
     }
 
     /**
-     * 设置内容view是否在最顶层，默认true
+     * 设置内容View是否在最顶层，默认true
      * <p>
-     * 内容view是当前容器的child才有效
+     * 内容View是当前容器的child才有效
      *
-     * @param top true-内容view在最顶层
+     * @param top true-内容View在最顶层
      */
     public void setContentTop(boolean top) {
         mContentTop = top;
@@ -150,21 +151,24 @@ public class FStateLayout extends FrameLayout {
     private void showStateView(IStateView stateView) {
         showView((View) stateView);
 
-        if (mShowContentWhenState)
+        if (mShowContentWhenState) {
             showView(getContentView());
-        else
+        } else {
             hideView(getContentView());
+        }
 
         if (mContentTop) {
-            if (mShowContentWhenState)
+            if (mShowContentWhenState) {
                 bringChildToFront(getContentView());
+            }
         } else {
             bringChildToFront((View) stateView);
         }
 
         for (IStateView item : mStateViewHolder) {
-            if (item != stateView)
+            if (item != stateView) {
                 hideView((View) item);
+            }
         }
     }
 
@@ -217,8 +221,9 @@ public class FStateLayout extends FrameLayout {
         if (count == 1) {
             setContentView(getChildAt(0));
         } else if (count > 1) {
-            if (child != mEmptyView && child != mErrorView)
+            if (child != mEmptyView && child != mErrorView) {
                 throw new RuntimeException("Illegal child: " + child);
+            }
         }
     }
 
@@ -226,11 +231,13 @@ public class FStateLayout extends FrameLayout {
     public void onViewRemoved(View child) {
         super.onViewRemoved(child);
 
-        if (getContentView() == child)
+        if (getContentView() == child) {
             setContentView(null);
+        }
 
-        if (child instanceof IStateView)
+        if (child instanceof IStateView) {
             mStateViewHolder.remove(child);
+        }
     }
 
     @Override
@@ -255,12 +262,14 @@ public class FStateLayout extends FrameLayout {
                 }
 
                 final FStateEmptyStrategy.Result result = mEmptyStrategy.getResult();
-                if (result == null)
+                if (result == null) {
                     throw new RuntimeException("Strategy result is null");
+                }
 
                 if (result == FStateEmptyStrategy.Result.Empty) {
-                    if (getShowType() == ShowType.Content)
+                    if (getShowType() == ShowType.Content) {
                         setShowType(ShowType.Empty);
+                    }
                 } else if (result == FStateEmptyStrategy.Result.Content) {
                     setShowType(ShowType.Content);
                 }
@@ -314,18 +323,21 @@ public class FStateLayout extends FrameLayout {
     }
 
     private static void hideView(View view) {
-        if (view != null && view.getVisibility() != GONE)
+        if (view != null && view.getVisibility() != GONE) {
             view.setVisibility(GONE);
+        }
     }
 
     private static void showView(View view) {
-        if (view != null && view.getVisibility() != VISIBLE)
+        if (view != null && view.getVisibility() != VISIBLE) {
             view.setVisibility(VISIBLE);
+        }
     }
 
     private static int getLayoutId(Context context, String name) {
-        if (TextUtils.isEmpty(name))
+        if (TextUtils.isEmpty(name)) {
             return 0;
+        }
 
         try {
             return context.getResources().getIdentifier(name, "layout", context.getPackageName());
@@ -335,12 +347,14 @@ public class FStateLayout extends FrameLayout {
     }
 
     private static boolean isAttached(View view) {
-        if (view == null)
+        if (view == null) {
             return false;
+        }
 
-        if (Build.VERSION.SDK_INT >= 19)
+        if (Build.VERSION.SDK_INT >= 19) {
             return view.isAttachedToWindow();
-        else
+        } else {
             return view.getWindowToken() != null;
+        }
     }
 }
