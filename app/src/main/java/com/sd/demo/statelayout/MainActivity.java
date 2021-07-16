@@ -14,15 +14,13 @@ import com.sd.lib.statelayout.FAutoEmptyStateLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity {
     private FAutoEmptyStateLayout view_state;
     private ListView lv_content;
     private final List<String> mListModel = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         view_state = findViewById(R.id.view_state);
@@ -33,32 +31,25 @@ public class MainActivity extends AppCompatActivity
         view_state.autoEmpty();
     }
 
-    public void onClickBtn(View view)
-    {
-        if (mListModel.isEmpty())
-        {
-            for (int i = 0; i < 10; i++)
-            {
+    public void onClickBtn(View view) {
+        if (mListModel.isEmpty()) {
+            for (int i = 0; i < 10; i++) {
                 mListModel.add(String.valueOf(i));
             }
-        } else
-        {
+        } else {
             mListModel.clear();
         }
         mAdapter.getDataHolder().setData(mListModel);
     }
 
-    private final FSimpleAdapter<String> mAdapter = new FSimpleAdapter<String>()
-    {
+    private final FSimpleAdapter<String> mAdapter = new FSimpleAdapter<String>() {
         @Override
-        public int getLayoutId(int position, View convertView, ViewGroup parent)
-        {
+        public int getLayoutId(int position, View convertView, ViewGroup parent) {
             return R.layout.item_content;
         }
 
         @Override
-        public void onBindData(int position, View convertView, ViewGroup parent, String model)
-        {
+        public void onBindData(int position, View convertView, ViewGroup parent, String model) {
             final TextView tv_content = get(R.id.tv_content, convertView);
             tv_content.setText(model);
         }
