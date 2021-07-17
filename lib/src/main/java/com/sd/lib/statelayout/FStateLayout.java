@@ -264,7 +264,7 @@ public class FStateLayout extends FrameLayout {
         }
 
         @Override
-        protected void onViewChanged(View oldView, View newView) {
+        protected void onViewChanged(@Nullable View oldView, @Nullable View newView) {
             super.onViewChanged(oldView, newView);
             onContentViewChanged(oldView, newView);
         }
@@ -299,8 +299,8 @@ public class FStateLayout extends FrameLayout {
     /**
      * 内容View变化
      *
-     * @param oldView
-     * @param newView
+     * @param oldView 旧的View
+     * @param newView 新的View
      */
     protected void onContentViewChanged(@Nullable View oldView, @Nullable View newView) {
     }
