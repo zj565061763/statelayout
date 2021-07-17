@@ -12,14 +12,14 @@ abstract class FViewListener<V extends View> {
     private WeakReference<V> mView;
 
     /**
-     * 返回设置的view
+     * 返回设置的View
      */
     public final V getView() {
         return mView == null ? null : mView.get();
     }
 
     /**
-     * 设置要监听的view
+     * 设置要监听的View
      */
     public final void setView(@Nullable V view) {
         final V old = getView();

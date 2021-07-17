@@ -8,14 +8,14 @@ public interface IStateView {
     /**
      * 设置显示内容
      *
-     * @param layoutId 内容view布局id
+     * @param layoutId 内容View布局id
      */
     void setContentView(int layoutId);
 
     /**
      * 设置显示内容
      *
-     * @param contentView 内容view
+     * @param contentView 内容View
      */
     void setContentView(@Nullable View contentView);
 }
